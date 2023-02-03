@@ -8,9 +8,13 @@
 #include "GlobalNamespace/IDifficultyBeatmap.hpp"
 #include "GlobalNamespace/PlatformLeaderboardsModel.hpp"
 #include "GlobalNamespace/ScoreModel.hpp"
+#include "GlobalNamespace/IPreviewBeatmapLevel.hpp"
+#include "GlobalNamespace/IBeatmapLevel.hpp"
+#include "GlobalNamespace/BeatmapCharacteristicSO.hpp"
 
 #include "System/DateTime.hpp"
 #include "UnityEngine/Time.hpp"
+#include "Config.hpp"
 using namespace GlobalNamespace;
 MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper::ProcessScore, void, PlayerData *playerData, PlayerLevelStatsData *playerLevelStats, LevelCompletionResults *levelCompletionResults, IReadonlyBeatmapData *transformedBeatmapData, IDifficultyBeatmap *difficultyBeatmap, PlatformLeaderboardsModel *platformLeaderboardsModel)
 {
@@ -21,14 +25,25 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     float acc = (modifiedScore / MaxScore) * 100;
 
 
-    std::string badCut = std::to_string(levelCompletionResults->badCutsCount);
-    std::string misses = std::to_string(levelCompletionResults->missedCount);
-    std::string FC = levelCompletionResults->fullCombo ? "Full Combo" : "Not FC";
+    int badCut = levelCompletionResults->badCutsCount;
+    int misses = levelCompletionResults->missedCount;
+    bool FC = levelCompletionResults->fullCombo;
     std::string currentTime = System::DateTime::get_UtcNow().ToLocalTime().ToString("dd/MM/yyyy h:mm tt");
 
-    getLogger().info("bad cuts: %s", badCut.c_str());
-    getLogger().info("misses: %s", misses.c_str());
-    getLogger().info("Full Combo: %s", FC.c_str());
+    std::string mapId = difficultyBeatmap->get_level()->i_IPreviewBeatmapLevel()->get_levelID();
+
+    int difficulty = difficultyBeatmap->get_difficultyRank();
+    std::string mapType = playerLevelStats->get_beatmapCharacteristic()->get_serializedName();
+    
+    std::string balls = mapType + std::to_string(difficulty); // BeatMap Allocated Level Label String :lmfao:
+
+    LocalLeaderboard::Config::UpdateBeatMapInfo(mapId, balls, misses, badCut, FC, currentTime, acc);
+
+    getLogger().info("mapId: %s", mapId.c_str());
+    getLogger().info("diff: %s", balls.c_str());
+    getLogger().info("bad cuts: %i", badCut);
+    getLogger().info("misses: %i", misses);
+    getLogger().info("Full Combo: %s", FC ? "true" : "false");
     getLogger().info("Accuracy: %.2f", acc);
     getLogger().info("Date: %s", currentTime.c_str());
     

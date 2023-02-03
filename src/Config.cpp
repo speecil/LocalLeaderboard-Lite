@@ -2,7 +2,7 @@
 #include "Config.hpp"
 using namespace rapidjson;
 
-namespace LocalLeaderboard{
+namespace LocalLeaderboard::Config{
 void AddBeatMap(Value& obj, std::string mapID, std::string diff, int missCount, int badCutCount, bool fullCombo, std::string datePlayed, float acc) {
     Value difficulty(kObjectType); // diff string
     auto allocator = getConfig().config.GetAllocator();
@@ -62,7 +62,7 @@ void UpdateBeatMapInfo(std::string mapID, std::string diff, int missCount, int b
     else AddBeatMap(obj, mapID, diff, missCount, badCutCount, fullCombo, datePlayed, acc);
 }
 
-std::vector<LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::string diff, int page){
+std::vector<LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::string diff){
     std::vector<LeaderboardEntry> leaderboard;
     auto allocator = getConfig().config.GetAllocator();
     Value& obj = getConfig().config;
@@ -71,8 +71,7 @@ std::vector<LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::string dif
         auto itr2 = itr->value.GetObject().FindMember(diff);
         if (itr2 != itr->value.GetObject().MemberEnd()){
             auto array = itr2->value.GetArray();
-            int pageStart = page*10;
-            for (int i=pageStart; i < array.Size() || i < pageStart+10; i++){
+            for (int i=0; i < array.Size(); i++){
                 auto scoreData = array[i].GetObject();
                 leaderboard.push_back(LeaderboardEntry(
                     scoreData.FindMember("missCount")->value.GetInt(),

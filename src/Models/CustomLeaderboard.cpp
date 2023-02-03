@@ -5,7 +5,7 @@
 
 namespace LocalLeaderboard::Models
 {
-    HMUI::ViewController* CustomLeaderboard::get_panelViewController()
+    UI::ViewControllers::LocalLeaderboardPanel* CustomLeaderboard::get_panelViewController()
     {
         if (!panelViewController)
         {
@@ -14,7 +14,7 @@ namespace LocalLeaderboard::Models
         return panelViewController.ptr();
     }
 
-    HMUI::ViewController* CustomLeaderboard::get_leaderboardViewController()
+    UI::ViewControllers::LocalLeaderboardViewController* CustomLeaderboard::get_leaderboardViewController()
     {
         if (!leaderboardViewController)
         {

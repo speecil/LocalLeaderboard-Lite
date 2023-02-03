@@ -6,6 +6,7 @@
 #include "logging.hpp"
 #include "hooking.hpp"
 #include "Models/CustomLeaderboard.hpp"
+#include "UI/LocalLeaderboardViewController.hpp"
 
 static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
 LocalLeaderboard::Models::CustomLeaderboard leaderboard;
@@ -33,7 +34,8 @@ extern "C" void setup(ModInfo& info) {
 }
 
 void LeaderboardSet(GlobalNamespace::IDifficultyBeatmap* difficultyBeatmap){
-
+    
+    leaderboard.get_leaderboardViewController()->RefreshLeaderboard(difficultyBeatmap);
 }
 
 // Called later on in the game loading - a good time to install function hooks
@@ -47,4 +49,6 @@ extern "C" void load() {
     LeaderboardCore::Events::NotifyLeaderboardSet() += LeaderboardSet;
     getConfig().Load();
 }
-// Date, Time, Acc, Mistakes
+
+
+BSML_DATACACHE()
