@@ -5,8 +5,10 @@
 #include "leaderboardcore/shared/LeaderboardCore.hpp"
 #include "logging.hpp"
 #include "hooking.hpp"
-static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
+#include "Models/CustomLeaderboard.hpp"
 
+static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
+LocalLeaderboard::Models::CustomLeaderboard leaderboard;
 // Loads the config from disk using our modInfo, then returns it for use
 // other config tools such as config-utils don't use this config, so it can be removed if those are in use
 Configuration& getConfig() {
@@ -30,11 +32,19 @@ extern "C" void setup(ModInfo& info) {
     getLogger().info("Completed setup!");
 }
 
+void LeaderboardSet(GlobalNamespace::IDifficultyBeatmap* difficultyBeatmap){
+
+}
+
 // Called later on in the game loading - a good time to install function hooks
 extern "C" void load() {
     il2cpp_functions::Init();
-
+    QuestUI::Init();
+    LeaderboardCore::Register::RegisterLeaderboard(&leaderboard, modInfo);
     getLogger().info("Installing hooks...");
-    // Install our hooks (none defined yet)
+    Hooks::InstallHooks(getLogger());
     getLogger().info("Installed all hooks!");
+    LeaderboardCore::Events::NotifyLeaderboardSet() += LeaderboardSet;
+    getConfig().Load();
 }
+// Date, Time, Acc, Mistakes
