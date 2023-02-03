@@ -54,10 +54,6 @@ Android.mk.backup
 # QPM stuff
 [Ee]xtern/
 *.qmod
-mod.json
-qpm.shared.json
-qpm_defines.cmake
-![Cc][Mm]ake[Ll]ists.txt
 
 # CMake stuff
 [Bb]uild/
@@ -66,6 +62,3 @@ extern.cmake
 
 # QMOD Schema
 mod.json.schema
-*.ps1
-*.json
-*.txt
