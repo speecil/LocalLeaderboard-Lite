@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+using namespace std;
 #include "GlobalNamespace/BeatmapDifficulty.hpp"
 
 namespace LocalLeaderboard::Utils
