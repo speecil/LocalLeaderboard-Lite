@@ -33,6 +33,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         if (firstActivation)
         {
             parse_and_construct(IncludedAssets::LocalLeaderboardViewController_bsml, this->get_transform(), this);
+            RefreshLeaderboard(currentDifficultyBeatmap);
         }
     }
 
@@ -44,10 +45,12 @@ namespace LocalLeaderboard::UI::ViewControllers
 
     void LocalLeaderboardViewController::RefreshLeaderboard(GlobalNamespace::IDifficultyBeatmap *difficultyBeatmap)
     {
+        currentDifficultyBeatmap = difficultyBeatmap;
+        if (!this->isActivated) return;
+        errorText->get_gameObject()->set_active(false);
         std::thread([difficultyBeatmap, this](){
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             QuestUI::MainThreadScheduler::Schedule([=](){
-                currentDifficultyBeatmap = difficultyBeatmap;
                 std::string mapId = difficultyBeatmap->get_level()->i_IPreviewBeatmapLevel()->get_levelID();
 
                 int difficulty = difficultyBeatmap->get_difficultyRank();
@@ -62,6 +65,9 @@ namespace LocalLeaderboard::UI::ViewControllers
                 leaderboardTableView->SetScores(CreateLeaderboardData(leaderboardEntries, 0), -1);
                 getLogger().info("Scores Set");
                 RichMyText(leaderboardTableView);
+                if(leaderboardEntries.size() == 0){
+                    errorText->get_gameObject()->set_active(true);
+                }
                 });
             }).detach();
             
@@ -90,7 +96,7 @@ namespace LocalLeaderboard::UI::ViewControllers
             formattedCombo = " - FC";
         }
         else{
-            formattedCombo = string_format(" - <color=red>%i X</color></size>", entry.badCutCount + entry.missCount).c_str();
+            formattedCombo = string_format(" - <color=red>x %i</color></size>", entry.badCutCount + entry.missCount).c_str();
         }
         std::string result = "<size=100%>" + formattedDate + formattedAcc + formattedCombo + "</size>";
 

@@ -11,19 +11,29 @@
 #include "GlobalNamespace/IPreviewBeatmapLevel.hpp"
 #include "GlobalNamespace/IBeatmapLevel.hpp"
 #include "GlobalNamespace/BeatmapCharacteristicSO.hpp"
-
+#include "UnityEngine/Resources.hpp"
+#include "UI/LocalLeaderboardPanel.hpp"
+#include "questui/shared/CustomTypes/Components/MainThreadScheduler.hpp"
+#include "UI/LocalLeaderboardViewController.hpp"
 #include "System/DateTime.hpp"
 #include "UnityEngine/Time.hpp"
 #include "Config.hpp"
 using namespace GlobalNamespace;
+
+LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *LLP;
+LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *LLVC;
+
 MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper::ProcessScore, void, PlayerData *playerData, PlayerLevelStatsData *playerLevelStats, LevelCompletionResults *levelCompletionResults, IReadonlyBeatmapData *transformedBeatmapData, IDifficultyBeatmap *difficultyBeatmap, PlatformLeaderboardsModel *platformLeaderboardsModel)
 {
     LevelCompletionResultsHelper(playerData, playerLevelStats, levelCompletionResults, transformedBeatmapData, difficultyBeatmap, platformLeaderboardsModel);
+    LLP = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *>().FirstOrDefault();
+    LLVC = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>().FirstOrDefault();
+
     float MaxScore = ScoreModel::ComputeMaxMultipliedScoreForBeatmap(transformedBeatmapData);
     float modifiedScore = levelCompletionResults->modifiedScore;
-    if (modifiedScore == 0 || MaxScore == 0) return;
+    if (modifiedScore == 0 || MaxScore == 0)
+        return;
     float acc = (modifiedScore / MaxScore) * 100;
-
 
     int badCut = levelCompletionResults->badCutsCount;
     int misses = levelCompletionResults->missedCount;
@@ -34,7 +44,7 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
 
     int difficulty = difficultyBeatmap->get_difficultyRank();
     std::string mapType = playerLevelStats->get_beatmapCharacteristic()->get_serializedName();
-    
+
     std::string balls = mapType + std::to_string(difficulty); // BeatMap Allocated Level Label String :lmfao:
 
     LocalLeaderboard::Config::UpdateBeatMapInfo(mapId, balls, misses, badCut, FC, currentTime, acc);
@@ -46,5 +56,12 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     getLogger().info("Full Combo: %s", FC ? "true" : "false");
     getLogger().info("Accuracy: %.2f", acc);
     getLogger().info("Date: %s", currentTime.c_str());
-    
+    LLP->SetSaving(true);
+        std::thread([difficultyBeatmap](){
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+            QuestUI::MainThreadScheduler::Schedule([=](){
+                LLP->SetSaving(false);
+                LLVC->RefreshLeaderboard(difficultyBeatmap);
+                });
+            }).detach();
 }

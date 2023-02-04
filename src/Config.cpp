@@ -94,7 +94,6 @@ std::vector<Models::LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::st
     if (itr != obj.MemberEnd()){
         auto itr2 = itr->value.GetObject().FindMember(diff);
         if (itr2 != itr->value.GetObject().MemberEnd()){
-            //vc->errorText->get_gameObject()->set_active(false);
             auto array = itr2->value.GetArray();
             for (int i=0; i < array.Size(); i++){
                 auto scoreData = array[i].GetObject();
@@ -105,12 +104,6 @@ std::vector<Models::LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::st
                     scoreData.FindMember("fullCombo")->value.GetBool(),
                     scoreData.FindMember("datePlayed")->value.GetString()));
             }
-            //pv->SetSaving(true);
-            //std::this_thread::sleep_for(std::chrono::seconds(1));
-            //pv->SetSaving(false);
-        }
-        else{
-            //vc->errorText->get_gameObject()->set_active(true);
         }
     }
     return leaderboard;

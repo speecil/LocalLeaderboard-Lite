@@ -22,10 +22,10 @@ namespace LocalLeaderboard::UI::ViewControllers
         }
     }
 
-    // void LocalLeaderboardPanel::SetSaving(bool value)
-    // {
-    //     pv->prompt_loader->set_active(value);
-    //     pv->promptText->get_gameObject()->set_active(value);
-    // }
+    void LocalLeaderboardPanel::SetSaving(bool value)
+    {
+        prompt_loader->set_active(value);
+        promptText->get_gameObject()->set_active(value);
+    }
 
 }
