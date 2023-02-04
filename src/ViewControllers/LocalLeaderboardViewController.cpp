@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <thread>
 #include "main.hpp"
-
+int totalPages;
 DEFINE_TYPE(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardViewController);
 
 using namespace QuestUI;
@@ -48,10 +48,12 @@ namespace LocalLeaderboard::UI::ViewControllers
 
     void LocalLeaderboardViewController::PostParse()
     {
+        
     }
 
     void LocalLeaderboardViewController::OnPageUp()
-    {
+    {   
+        
         page--;
         RefreshLeaderboard(currentDifficultyBeatmap);
     }
@@ -67,6 +69,14 @@ namespace LocalLeaderboard::UI::ViewControllers
         currentDifficultyBeatmap = difficultyBeatmap;
         if (!this->isActivated)
             return;
+        up_button->set_interactable(true);
+        down_button->set_interactable(true);
+        if(totalPages - page == totalPages){
+            up_button->set_interactable(false);
+        }
+        if(totalPages == page){
+            down_button->set_interactable(false);
+        }
         errorText->get_gameObject()->set_active(false);
         std::string mapId = difficultyBeatmap->get_level()->i_IPreviewBeatmapLevel()->get_levelID();
 
@@ -79,6 +89,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         std::sort(leaderboardEntries.begin(), leaderboardEntries.end(), [](auto &first, auto &second)
                   { return first.acc > second.acc; });
         getLogger().info("leaderboard size: %lu", leaderboardEntries.size());
+        totalPages = leaderboardEntries.size() / 10;
         leaderboardTableView->SetScores(CreateLeaderboardData(leaderboardEntries, page), -1);
         getLogger().info("Scores Set");
         RichMyText(leaderboardTableView);
