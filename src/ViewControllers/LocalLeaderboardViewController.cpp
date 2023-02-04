@@ -69,14 +69,6 @@ namespace LocalLeaderboard::UI::ViewControllers
         currentDifficultyBeatmap = difficultyBeatmap;
         if (!this->isActivated)
             return;
-        up_button->set_interactable(true);
-        down_button->set_interactable(true);
-        if(totalPages - page == totalPages){
-            up_button->set_interactable(false);
-        }
-        if(totalPages == page){
-            down_button->set_interactable(false);
-        }
         errorText->get_gameObject()->set_active(false);
         std::string mapId = difficultyBeatmap->get_level()->i_IPreviewBeatmapLevel()->get_levelID();
 
@@ -93,9 +85,19 @@ namespace LocalLeaderboard::UI::ViewControllers
         leaderboardTableView->SetScores(CreateLeaderboardData(leaderboardEntries, page), -1);
         getLogger().info("Scores Set");
         RichMyText(leaderboardTableView);
+        up_button->set_interactable(true);
+        down_button->set_interactable(true);
+        if(totalPages - page == totalPages){
+            up_button->set_interactable(false);
+        }
+        if(totalPages == page){
+            down_button->set_interactable(false);
+        }
         if (leaderboardEntries.size() == 0)
         {
             errorText->get_gameObject()->set_active(true);
+            up_button->set_interactable(false);
+            down_button->set_interactable(false);
         }
     }
 

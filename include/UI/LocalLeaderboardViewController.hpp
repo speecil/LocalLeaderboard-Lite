@@ -20,10 +20,10 @@ DECLARE_CLASS_CODEGEN(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardVie
     DECLARE_INSTANCE_FIELD(UnityEngine::UI::Button*, down_button);
     DECLARE_INSTANCE_METHOD(void, OnPageUp);
     DECLARE_INSTANCE_METHOD(void, OnPageDown);
-
-
-    private:
+    
+    public:
         int page;
+    private:
         GlobalNamespace::IDifficultyBeatmap* currentDifficultyBeatmap;
         GlobalNamespace::LeaderboardTableView::ScoreData* CreateLeaderboardEntryData(Models::LeaderboardEntry entry, int rank);
         List<GlobalNamespace::LeaderboardTableView::ScoreData*>* CreateLeaderboardData(std::vector<Models::LeaderboardEntry> leaderboard, int page);
