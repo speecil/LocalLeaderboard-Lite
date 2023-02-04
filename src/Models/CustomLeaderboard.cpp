@@ -1,7 +1,5 @@
 #include "Models/CustomLeaderboard.hpp"
-#include "UI/LocalLeaderboardViewController.hpp"
-#include "UI/LocalLeaderboardPanel.hpp"
-#include "questui/shared/BeatSaberUI.hpp"
+#include "bsml/shared/Helpers/creation.hpp"
 
 namespace LocalLeaderboard::Models
 {
@@ -9,7 +7,7 @@ namespace LocalLeaderboard::Models
     {
         if (!panelViewController)
         {
-            panelViewController = QuestUI::BeatSaberUI::CreateViewController<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel*>();
+            panelViewController = BSML::Helpers::CreateViewController<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel*>();
         }
         return panelViewController.ptr();
     }
@@ -18,7 +16,7 @@ namespace LocalLeaderboard::Models
     {
         if (!leaderboardViewController)
         {
-            leaderboardViewController = QuestUI::BeatSaberUI::CreateViewController<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController*>();
+            leaderboardViewController = BSML::Helpers::CreateViewController<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController*>();
         }
         return leaderboardViewController.ptr();
     }

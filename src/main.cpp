@@ -7,6 +7,7 @@
 #include "hooking.hpp"
 #include "Models/CustomLeaderboard.hpp"
 #include "UI/LocalLeaderboardViewController.hpp"
+#include "assets.hpp"
 
 static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
 LocalLeaderboard::Models::CustomLeaderboard leaderboard;
@@ -50,5 +51,26 @@ extern "C" void load() {
     getConfig().Load();
 }
 
+BSML_DATACACHE(LocalLeaderboard_png) {
+    return IncludedAssets::LocalLeaderboard_png;
+}
 
-BSML_DATACACHE()
+BSML_DATACACHE(pixel_png) {
+    return IncludedAssets::pixel_png;
+}
+
+BSML_DATACACHE(Player_png) {
+    return IncludedAssets::Player_png;
+}
+
+BSML_DATACACHE(carat_png) {
+    return IncludedAssets::carat_png;
+}
+
+BSML_DATACACHE(LocalLeaderboardViewController_bsml) {
+    return IncludedAssets::LocalLeaderboardViewController_bsml;
+}
+
+BSML_DATACACHE(PanelView_bsml) {
+    return IncludedAssets::PanelView_bsml;
+}

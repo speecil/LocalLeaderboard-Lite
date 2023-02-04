@@ -115,7 +115,8 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "__std_stream": "cpp",
-        "*.bsml": "xml"
+        "*.bsml": "xml",
+        "__memory": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

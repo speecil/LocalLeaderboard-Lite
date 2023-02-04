@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace LocalLeaderboard
+namespace LocalLeaderboard::Models
 {
     struct LeaderboardEntry
     {

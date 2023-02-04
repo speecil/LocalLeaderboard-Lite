@@ -12,7 +12,7 @@ namespace LocalLeaderboard::Models
             UI::ViewControllers::LocalLeaderboardPanel* get_panelViewController() final override;
             UI::ViewControllers::LocalLeaderboardViewController* get_leaderboardViewController() final override;
         private:
-            SafePtrUnity<HMUI::ViewController> panelViewController;
-            SafePtrUnity<HMUI::ViewController> leaderboardViewController;
+            SafePtrUnity<UI::ViewControllers::LocalLeaderboardPanel> panelViewController;
+            SafePtrUnity<UI::ViewControllers::LocalLeaderboardViewController> leaderboardViewController;
     };
 }
