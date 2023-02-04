@@ -12,8 +12,12 @@
 DECLARE_CLASS_CODEGEN(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardViewController, HMUI::ViewController,
     DECLARE_OVERRIDE_METHOD(void, DidActivate, il2cpp_utils::il2cpp_type_check::MetadataGetter<&HMUI::ViewController::DidActivate>::get(), bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling);
     DECLARE_INSTANCE_METHOD(void, RefreshLeaderboard, GlobalNamespace::IDifficultyBeatmap* difficultyBeatmap);
+    DECLARE_INSTANCE_METHOD(void, PostParse);
     DECLARE_INSTANCE_FIELD(GlobalNamespace::LeaderboardTableView*, leaderboardTableView);
     DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI*, errorText);
+    DECLARE_INSTANCE_METHOD(void, OnPageUp);
+    DECLARE_INSTANCE_METHOD(void, OnPageDown);
+
 
     private:
         int page;

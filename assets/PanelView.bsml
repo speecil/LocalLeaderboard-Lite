@@ -6,9 +6,9 @@
       <vertical pref-width="0.5" pref-height="10">
         <image id="separator" src="LocalLeaderboard_pixel_png" pref-width="0.5" pref-height="10" size-delta-x="0.5" size-delta-y="10" />
       </vertical>
-      <vertical active="true" pref-width="70" pref-height="10" spacing="-1">
-        <text id="promptText" text="Saving..." anchor-pos-x="0" anchor-pos-y="10" align="BottomLeft" italics="true" active="false"/>
+      <horizontal active="true" pref-width="70" pref-height="10" spacing="-1">
+        <text id="promptText" text="Saving..." font-size="12" anchor-pos-x="0" anchor-pos-y="0" align="Center" italics="true" active="false"/>
         <loading-indicator id="prompt_loader" active="~prompt-loader-active" preserve-aspect="true" pref-width="4" pref-height="4" />
-      </vertical>
+      </horizontal>
     </horizontal>
   </bg>
