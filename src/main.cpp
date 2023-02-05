@@ -66,8 +66,12 @@ BSML_DATACACHE(pixel_png) {
     return IncludedAssets::pixel_png;
 }
 
-BSML_DATACACHE(Player_png) {
-    return IncludedAssets::Player_png;
+BSML_DATACACHE(clock_png) {
+    return IncludedAssets::clock_png;
+}
+
+BSML_DATACACHE(score_png) {
+    return IncludedAssets::score_png;
 }
 
 BSML_DATACACHE(carat_png) {
