@@ -38,6 +38,12 @@ void LeaderboardSet(GlobalNamespace::IDifficultyBeatmap* difficultyBeatmap){
     
     leaderboard.get_leaderboardViewController()->page = 0;
     leaderboard.get_leaderboardViewController()->RefreshLeaderboard(difficultyBeatmap);
+    if(leaderboard.get_leaderboardViewController()->get_transform()->Find("HeaderPanel")){
+        getLogger().info("header found lmao");
+    }
+    else{
+        getLogger().info("header gone lmao");
+    }
 }
 
 // Called later on in the game loading - a good time to install function hooks
@@ -52,8 +58,8 @@ extern "C" void load() {
     getConfig().Load();
 }
 
-BSML_DATACACHE(LocalLeaderboard_png) {
-    return IncludedAssets::LocalLeaderboard_png;
+BSML_DATACACHE(LocalLeaderboard_logo_png) {
+    return IncludedAssets::LocalLeaderboard_logo_png;
 }
 
 BSML_DATACACHE(pixel_png) {

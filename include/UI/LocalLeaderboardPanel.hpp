@@ -9,7 +9,10 @@
 DECLARE_CLASS_CODEGEN(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardPanel, HMUI::ViewController,
     DECLARE_OVERRIDE_METHOD(void, DidActivate, il2cpp_utils::il2cpp_type_check::MetadataGetter<&HMUI::ViewController::DidActivate>::get(), bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling);
     DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI*, promptText);
+    DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI*, totalScores);
+    DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI*, lastPlayed);
     DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, prompt_loader);
+    DECLARE_INSTANCE_METHOD(void, Update);
     DECLARE_INSTANCE_METHOD(void, SetSaving, bool value);
     DECLARE_INSTANCE_METHOD(void, PostParse);
     DECLARE_INSTANCE_FIELD(UnityEngine::UI::HorizontalLayoutGroup*, container);

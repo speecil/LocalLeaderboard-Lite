@@ -43,8 +43,8 @@ struct IncludedAsset {
 
 namespace IncludedAssets {
 
-	DECLARE_FILE(LocalLeaderboard_png)
 	DECLARE_FILE(LocalLeaderboardViewController_bsml)
+	DECLARE_FILE(LocalLeaderboard_logo_png)
 	DECLARE_FILE(PanelView_bsml)
 	DECLARE_FILE(Player_png)
 	DECLARE_FILE(carat_png)

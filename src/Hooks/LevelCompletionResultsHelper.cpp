@@ -28,13 +28,12 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     LevelCompletionResultsHelper(playerData, playerLevelStats, levelCompletionResults, transformedBeatmapData, difficultyBeatmap, platformLeaderboardsModel);
     LLP = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *>().FirstOrDefault();
     LLVC = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>().FirstOrDefault();
-
     float MaxScore = ScoreModel::ComputeMaxMultipliedScoreForBeatmap(transformedBeatmapData);
     float modifiedScore = levelCompletionResults->modifiedScore;
     if (modifiedScore == 0 || MaxScore == 0)
         return;
     float acc = (modifiedScore / MaxScore) * 100;
-
+    int score = levelCompletionResults->modifiedScore;
     int badCut = levelCompletionResults->badCutsCount;
     int misses = levelCompletionResults->missedCount;
     bool FC = levelCompletionResults->fullCombo;
@@ -47,7 +46,7 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
 
     std::string balls = mapType + std::to_string(difficulty); // BeatMap Allocated Level Label String :lmfao:
 
-    LocalLeaderboard::Config::UpdateBeatMapInfo(mapId, balls, misses, badCut, FC, currentTime, acc);
+    LocalLeaderboard::Config::UpdateBeatMapInfo(mapId, balls, misses, badCut, FC, currentTime, acc, score);
 
     getLogger().info("mapId: %s", mapId.c_str());
     getLogger().info("diff: %s", balls.c_str());
