@@ -23,14 +23,14 @@ using namespace LocalLeaderboard::Models;
 using namespace LocalLeaderboard::UI::ViewControllers;
 using namespace GlobalNamespace;
 using namespace rapidjson;
-// LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController* vc;
-// LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel* pv;
-int recent;
+
+// Config Namespace
 namespace LocalLeaderboard::Config{
+// Function to add a new beatmap result data
 void AddBeatMap(Value& obj, std::string mapID, std::string diff, int missCount, int badCutCount, bool fullCombo, std::string datePlayed, float acc, int score) {
-    Value difficulty(kObjectType); // diff string
-    auto allocator = getConfig().config.GetAllocator();
-    char buffer[60]; int len = sprintf(buffer, "%s", mapID.c_str());
+    Value difficulty(kObjectType); // difficulty string
+    auto allocator = getConfig().config.GetAllocator(); // RapidJSON Allocator
+    char buffer[60]; int len = sprintf(buffer, "%s", mapID.c_str()); // Buffer to stop issues with config saving?
     Document::ValueType string(kStringType);
     string.SetString(buffer, len, allocator);
     ///
@@ -97,7 +97,6 @@ std::vector<Models::LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::st
         auto itr2 = itr->value.GetObject().FindMember(diff);
         if (itr2 != itr->value.GetObject().MemberEnd()){
             auto array = itr2->value.GetArray();
-            recent = array.Size() - 1;
             for (int i=0; i < array.Size(); i++){
                 auto scoreData = array[i].GetObject();
                 leaderboard.push_back(Models::LeaderboardEntry(
