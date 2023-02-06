@@ -15,4 +15,5 @@
         <text id="lastPlayed" text="" font-align="Left" active="false" italics="true"/>
       </vertical>
     </horizontal>
+    <clickable-image src="LocalLeaderboard_carat_png" id="sorter" on-click="changeSort" hover-hint='Sort Ascending/Descending'  pref-height='8' pref-width='8' anchor-pos-x='40' />
   </bg>

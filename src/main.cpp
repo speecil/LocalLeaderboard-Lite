@@ -10,10 +10,9 @@
 #include "assets.hpp"
 
 static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
-
-LocalLeaderboard::Models::CustomLeaderboard leaderboard; // Defines my custom leaderboard for easy access
-
+LocalLeaderboard::Models::CustomLeaderboard leaderboard;
 // Loads the config from disk using our modInfo, then returns it for use
+// other config tools such as config-utils don't use this config, so it can be removed if those are in use
 Configuration& getConfig() {
     static Configuration config(modInfo);
     return config;
@@ -27,8 +26,6 @@ Logger& getLogger() {
 
 // Called at the early stages of game loading
 extern "C" void setup(ModInfo& info) {
-    
-    // define variables to the modloader variables
     info.id = MOD_ID;
     info.version = VERSION;
     modInfo = info;
@@ -37,35 +34,29 @@ extern "C" void setup(ModInfo& info) {
     getLogger().info("Completed setup!");
 }
 
-// This function runs when a new map is selected, (requires a map and its difficulty)
 void LeaderboardSet(GlobalNamespace::IDifficultyBeatmap* difficultyBeatmap){
     
-    // Sets page to 0 to avoid blank page if prior page exceeds new map's pages.
     leaderboard.get_leaderboardViewController()->page = 0;
-    // Refreshes the leaderboard using the RefreshLeaderboard function
     leaderboard.get_leaderboardViewController()->RefreshLeaderboard(difficultyBeatmap);
+    if(leaderboard.get_leaderboardViewController()->get_transform()->Find("HeaderPanel")){
+        getLogger().info("header found lmao");
+    }
+    else{
+        getLogger().info("header gone lmao");
+    }
 }
 
-// Called later on in the game loading 
-// This is where I install function hooks
+// Called later on in the game loading - a good time to install function hooks
 extern "C" void load() {
-    // Base game function
     il2cpp_functions::Init();
-    
-    // QuestUI is a GUI Utility For Modders.
     QuestUI::Init();
-
-    // Leaderboard, Hooks and Config Init
     LeaderboardCore::Register::RegisterLeaderboard(&leaderboard, modInfo);
-    LeaderboardCore::Events::NotifyLeaderboardSet() += LeaderboardSet;
     getLogger().info("Installing hooks...");
     Hooks::InstallHooks(getLogger());
     getLogger().info("Installed all hooks!");
+    LeaderboardCore::Events::NotifyLeaderboardSet() += LeaderboardSet;
     getConfig().Load();
 }
-
-// Beat Saber Markup Language (BSML) Data Cache
-// Helps load images/bsml files quicker
 
 BSML_DATACACHE(LocalLeaderboard_logo_png) {
     return IncludedAssets::LocalLeaderboard_logo_png;
