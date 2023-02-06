@@ -96,7 +96,6 @@ std::vector<Models::LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::st
         auto itr2 = itr->value.GetObject().FindMember(diff);
         if (itr2 != itr->value.GetObject().MemberEnd()){
             auto array = itr2->value.GetArray();
-            recent = array.Size() - 1;
             for (int i=0; i < array.Size(); i++){
                 auto scoreData = array[i].GetObject();
                 leaderboard.push_back(Models::LeaderboardEntry(

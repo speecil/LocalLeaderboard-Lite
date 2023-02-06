@@ -16,8 +16,14 @@
 #include <string>
 #include <thread>
 #include "main.hpp"
+#include "HMUI/IconSegmentedControl.hpp"
+#include "HMUI/IconSegmentedControlCell.hpp"
+#include "HMUI/IconSegmentedControl_DataItem.hpp"
+#include <array>
+#include "bsml/shared/BSML/Components/ButtonIconImage.hpp"
+#include "bsml/shared/Helpers/utilities.hpp"
 int totalPages;
-
+bool Ascending;
 DEFINE_TYPE(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardViewController);
 
 using namespace QuestUI;
@@ -25,10 +31,13 @@ using namespace QuestUI::BeatSaberUI;
 using namespace HMUI;
 using namespace UnityEngine;
 using namespace UnityEngine::UI;
-using namespace BSML;
+using namespace BSML::Utilities;
+using namespace HMUI;
+using namespace GlobalNamespace;
 using namespace LocalLeaderboard::Models;
 using namespace LocalLeaderboard::UI::ViewControllers;
 using namespace GlobalNamespace;
+using namespace BSML;
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *Panel;
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *View;
 namespace LocalLeaderboard::UI::ViewControllers
@@ -42,6 +51,7 @@ namespace LocalLeaderboard::UI::ViewControllers
             parse_and_construct(IncludedAssets::LocalLeaderboardViewController_bsml, this->get_transform(), this);
             Panel = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *>().FirstOrDefault();
             View = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>().FirstOrDefault();
+
             RefreshLeaderboard(currentDifficultyBeatmap);
         }
         originalplvc = UnityEngine::Resources::FindObjectsOfTypeAll<PlatformLeaderboardViewController *>().FirstOrDefault();
@@ -84,12 +94,20 @@ namespace LocalLeaderboard::UI::ViewControllers
 
     void LocalLeaderboardViewController::PostParse()
     {
+        auto icons = ArrayW<IconSegmentedControl::DataItem *>({IconSegmentedControl::DataItem::New_ctor(LoadSpriteRaw(IncludedAssets::clock_png), "DateTime"),
+                                                               IconSegmentedControl::DataItem::New_ctor(LoadSpriteRaw(IncludedAssets::score_png), "Highscore")});
+        scopeSegmentedControl->SetData(icons);
     }
 
     void LocalLeaderboardViewController::OnPageUp()
     {
-
         page--;
+        RefreshLeaderboard(currentDifficultyBeatmap);
+    }
+
+    void LocalLeaderboardViewController::OnIconSelected(IconSegmentedControl *segmentedControl, int index)
+    {
+        sortMethod = index;
         RefreshLeaderboard(currentDifficultyBeatmap);
     }
 
@@ -118,8 +136,29 @@ namespace LocalLeaderboard::UI::ViewControllers
             LeaderboardEntry recent = leaderboardEntries[leaderboardEntries.size() - 1];
             Panel->lastPlayed->SetText("Last Played: " + recent.datePlayed);
         }
-        std::sort(leaderboardEntries.begin(), leaderboardEntries.end(), [](auto &first, auto &second)
-                  { return first.acc > second.acc; });
+        if (Ascending)
+        {
+            if (sortMethod == 0)
+            {
+                        }
+            else if (sortMethod == 1)
+            {
+                std::sort(leaderboardEntries.begin(), leaderboardEntries.end(), [](auto &first, auto &second)
+                          { return second.acc > first.acc; });
+            }
+        }
+        else
+        {
+            if (sortMethod == 0)
+            {
+                std::reverse(leaderboardEntries.begin(), leaderboardEntries.end());
+            }
+            else if (sortMethod == 1)
+            {
+                std::sort(leaderboardEntries.begin(), leaderboardEntries.end(), [](auto &first, auto &second)
+                          { return first.acc > second.acc; });
+            }
+        }
         getLogger().info("leaderboard size: %lu", leaderboardEntries.size());
         totalPages = leaderboardEntries.size() / 10;
         leaderboardTableView->SetScores(CreateLeaderboardData(leaderboardEntries, page), -1);
@@ -140,8 +179,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         if (leaderboardEntries.size() == 0)
         {
             errorText->get_gameObject()->set_active(true);
-            // b
-            errorText->set_fontSize(6);
+            errorText->set_fontSize(9);
             up_button->set_interactable(false);
             down_button->set_interactable(false);
             Panel->lastPlayed->get_gameObject()->set_active(false);
@@ -184,7 +222,6 @@ namespace LocalLeaderboard::UI::ViewControllers
         }
         std::string result = "<size=100%>" + formattedDate + formattedAcc + formattedCombo + "</size>";
 
-        // uh oh this could cause a lot of problems given the format we want
         getLogger().info("Created Entry Data");
         return GlobalNamespace::LeaderboardTableView::ScoreData::New_ctor(score, result, rank, false);
     }
