@@ -19,7 +19,7 @@
       "downloadIfMissing": "https://github.com/darknight1050/QuestUI/releases/download/v0.17.10/QuestUI.qmod"
     },
     {
-      "version": "*",
+      "version": "^0.3.0",
       "id": "bsml",
       "downloadIfMissing": "https://github.com/RedBrumbler/Quest-BSML/releases/download/v0.3.0/BSML.qmod"
     },

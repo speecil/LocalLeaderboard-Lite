@@ -16,14 +16,8 @@
 #include <string>
 #include <thread>
 #include "main.hpp"
-#include "HMUI/IconSegmentedControl.hpp"
-#include "HMUI/IconSegmentedControlCell.hpp"
-#include "HMUI/IconSegmentedControl_DataItem.hpp"
-#include <array>
-#include "bsml/shared/BSML/Components/ButtonIconImage.hpp"
-#include "bsml/shared/Helpers/utilities.hpp"
 int totalPages;
-bool Ascending;
+
 DEFINE_TYPE(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardViewController);
 
 using namespace QuestUI;
@@ -31,13 +25,10 @@ using namespace QuestUI::BeatSaberUI;
 using namespace HMUI;
 using namespace UnityEngine;
 using namespace UnityEngine::UI;
-using namespace BSML::Utilities;
-using namespace HMUI;
-using namespace GlobalNamespace;
+using namespace BSML;
 using namespace LocalLeaderboard::Models;
 using namespace LocalLeaderboard::UI::ViewControllers;
 using namespace GlobalNamespace;
-using namespace BSML;
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *Panel;
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *View;
 namespace LocalLeaderboard::UI::ViewControllers
@@ -93,20 +84,12 @@ namespace LocalLeaderboard::UI::ViewControllers
 
     void LocalLeaderboardViewController::PostParse()
     {
-        auto icons = ArrayW<IconSegmentedControl::DataItem *>({IconSegmentedControl::DataItem::New_ctor(LoadSpriteRaw(IncludedAssets::clock_png), "DateTime"),
-                                                               IconSegmentedControl::DataItem::New_ctor(LoadSpriteRaw(IncludedAssets::score_png), "Highscore")});
-        scopeSegmentedControl->SetData(icons);
     }
 
     void LocalLeaderboardViewController::OnPageUp()
     {
-        page--;
-        RefreshLeaderboard(currentDifficultyBeatmap);
-    }
 
-    void LocalLeaderboardViewController::OnIconSelected(IconSegmentedControl *segmentedControl, int index)
-    {
-        sortMethod = index;
+        page--;
         RefreshLeaderboard(currentDifficultyBeatmap);
     }
 
@@ -135,30 +118,8 @@ namespace LocalLeaderboard::UI::ViewControllers
             LeaderboardEntry recent = leaderboardEntries[leaderboardEntries.size() - 1];
             Panel->lastPlayed->SetText("Last Played: " + recent.datePlayed);
         }
-        if (Ascending)
-        {
-            if (sortMethod == 0)
-            {
-                
-            }
-            else if (sortMethod == 1)
-            {
-                std::sort(leaderboardEntries.begin(), leaderboardEntries.end(), [](auto &first, auto &second)
-                          { return second.acc > first.acc; });
-            }
-        }
-        else
-        {
-            if (sortMethod == 0)
-            {
-                std::reverse(leaderboardEntries.begin(), leaderboardEntries.end());
-            }
-            else if (sortMethod == 1)
-            {
-                std::sort(leaderboardEntries.begin(), leaderboardEntries.end(), [](auto &first, auto &second)
-                          { return first.acc > second.acc; });
-            }
-        }
+        std::sort(leaderboardEntries.begin(), leaderboardEntries.end(), [](auto &first, auto &second)
+                  { return first.acc > second.acc; });
         getLogger().info("leaderboard size: %lu", leaderboardEntries.size());
         totalPages = leaderboardEntries.size() / 10;
         leaderboardTableView->SetScores(CreateLeaderboardData(leaderboardEntries, page), -1);
@@ -222,6 +183,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         }
         std::string result = "<size=100%>" + formattedDate + formattedAcc + formattedCombo + "</size>";
 
+        // uh oh this could cause a lot of problems given the format we want
         getLogger().info("Created Entry Data");
         return GlobalNamespace::LeaderboardTableView::ScoreData::New_ctor(score, result, rank, false);
     }
