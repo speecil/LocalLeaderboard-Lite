@@ -179,7 +179,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         if (leaderboardEntries.size() == 0)
         {
             errorText->get_gameObject()->set_active(true);
-            errorText->set_fontSize(9);
+            errorText->set_fontSize(6);
             up_button->set_interactable(false);
             down_button->set_interactable(false);
             Panel->lastPlayed->get_gameObject()->set_active(false);
