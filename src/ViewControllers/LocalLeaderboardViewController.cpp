@@ -40,6 +40,7 @@ using namespace GlobalNamespace;
 using namespace BSML;
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *Panel;
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *View;
+bool shouldRefresh = false;
 namespace LocalLeaderboard::UI::ViewControllers
 {
     PlatformLeaderboardViewController *originalplvc = NULL;
@@ -67,10 +68,17 @@ namespace LocalLeaderboard::UI::ViewControllers
                 getLogger().info("set header text ACTIVATE");
             }
         }
+        // if(shouldRefresh){
+        //     RefreshLeaderboard(currentDifficultyBeatmap);
+        // }
+        // shouldRefresh = false;
+        RefreshLeaderboard(currentDifficultyBeatmap);
     }
 
     void LocalLeaderboardViewController::DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
-    {
+    {   
+        shouldRefresh = true;
+        if(!originalplvc || !originalplvc->m_CachedPtr.m_value) return ;
         if (originalplvc->get_transform()->Find("HeaderPanel"))
         {
             getLogger().info("found header panel DEACTIVATE");
@@ -179,7 +187,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         if (leaderboardEntries.size() == 0)
         {
             errorText->get_gameObject()->set_active(true);
-            errorText->set_fontSize(9);
+            errorText->set_fontSize(7);
             up_button->set_interactable(false);
             down_button->set_interactable(false);
             Panel->lastPlayed->get_gameObject()->set_active(false);

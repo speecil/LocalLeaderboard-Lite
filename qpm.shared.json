@@ -56,7 +56,8 @@
         "versionRange": "^1.2.9",
         "additionalData": {}
       }
-    ]
+    ],
+    "workspace": null
   },
   "restoredDependencies": [
     {
