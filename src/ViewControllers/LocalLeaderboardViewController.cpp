@@ -51,8 +51,8 @@ namespace LocalLeaderboard::UI::ViewControllers
             parse_and_construct(IncludedAssets::LocalLeaderboardViewController_bsml, this->get_transform(), this);
             Panel = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *>().FirstOrDefault();
             View = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>().FirstOrDefault();
+            RefreshLeaderboard(currentDifficultyBeatmap);
         }
-        RefreshLeaderboard(currentDifficultyBeatmap);
         originalplvc = UnityEngine::Resources::FindObjectsOfTypeAll<PlatformLeaderboardViewController *>().FirstOrDefault();
 
         if (originalplvc->get_transform()->Find("HeaderPanel"))
