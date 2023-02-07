@@ -1,3 +1,7 @@
+<!-- This is a BSML File (Beat Saber Markup Language), 
+     it uses a custom schema and parser to turn the xml code into 
+     UI objects in game that can be edited using methods -->
+     
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/RedBrumbler/Quest-BSML-Docs/gh-pages/schema.xsd'>
 
     <!-- Leaderboard scrollers -->

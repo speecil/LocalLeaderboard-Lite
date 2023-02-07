@@ -34,29 +34,27 @@ extern "C" void setup(ModInfo& info) {
     getLogger().info("Completed setup!");
 }
 
+// This function runs when a new beatmap is selected
+// Sets the leaderboard to the newly selected beatmap and runs the function to load its data
 void LeaderboardSet(GlobalNamespace::IDifficultyBeatmap* difficultyBeatmap){
     
-    leaderboard.get_leaderboardViewController()->page = 0;
-    leaderboard.get_leaderboardViewController()->RefreshLeaderboard(difficultyBeatmap);
-    if(leaderboard.get_leaderboardViewController()->get_transform()->Find("HeaderPanel")){
-        getLogger().info("header found lmao");
-    }
-    else{
-        getLogger().info("header gone lmao");
-    }
+    leaderboard.get_leaderboardViewController()->page = 0; // set page to 0 to avoid blank page if new beatmap has no data on the page.
+    leaderboard.get_leaderboardViewController()->RefreshLeaderboard(difficultyBeatmap); // Refreshes leaderboard with new beatmaps data.
 }
 
-// Called later on in the game loading - a good time to install function hooks
+// Called later on in the game loading - this is where I install function hooks
 extern "C" void load() {
-    il2cpp_functions::Init();
-    QuestUI::Init();
-    LeaderboardCore::Register::RegisterLeaderboard(&leaderboard, modInfo);
+    il2cpp_functions::Init(); // Initialise il2cpp functions to interact with the game
+    QuestUI::Init(); // Initialise QuestUI for UI elements
+    LeaderboardCore::Register::RegisterLeaderboard(&leaderboard, modInfo); // register the leaderboard with the multi-leaderboard handler
     getLogger().info("Installing hooks...");
-    Hooks::InstallHooks(getLogger());
+    Hooks::InstallHooks(getLogger()); // Install game hooks
     getLogger().info("Installed all hooks!");
-    LeaderboardCore::Events::NotifyLeaderboardSet() += LeaderboardSet;
-    getConfig().Load();
+    LeaderboardCore::Events::NotifyLeaderboardSet() += LeaderboardSet; // Create an event listener to run my leaderboards code when a new beatmap is selected
+    getConfig().Load(); // Load my mod specific config for use within the game
 }
+
+// BSML (Beat Saber Markup Language) Image Cache to load images faster
 
 BSML_DATACACHE(LocalLeaderboard_logo_png) {
     return IncludedAssets::LocalLeaderboard_logo_png;

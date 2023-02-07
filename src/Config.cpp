@@ -86,7 +86,9 @@ void UpdateBeatMapInfo(std::string mapID, std::string diff, int missCount, int b
     }
     else AddBeatMap(obj, mapID, diff, missCount, badCutCount, fullCombo, datePlayed, acc, score);
 }
-
+/*
+Loads BeatMap Data (scores) for a given beatmap,
+*/
 std::vector<Models::LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::string diff){
     std::vector<Models::LeaderboardEntry> leaderboard;
     auto allocator = getConfig().config.GetAllocator();
@@ -108,6 +110,6 @@ std::vector<Models::LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::st
             }
         }
     }
-    return leaderboard;
+    return leaderboard; // returns leaderboard score data array for a given beatmap
 }
 }
