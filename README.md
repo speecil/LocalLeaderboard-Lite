@@ -1,6 +1,8 @@
-# #{name}
+# LocalLeaderboard
 
-#{description}
+#### A Leaderboard all about you!
+
+Save and see all of your scores within a clean leaderboard
 
 ## Credits
 
