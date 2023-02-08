@@ -19,9 +19,9 @@
       "downloadIfMissing": "https://github.com/darknight1050/QuestUI/releases/download/v0.17.10/QuestUI.qmod"
     },
     {
-      "version": "^0.3.0",
-      "id": "bsml",
-      "downloadIfMissing": "https://github.com/RedBrumbler/Quest-BSML/releases/download/v0.3.0/BSML.qmod"
+      "version": "^0.0.2",
+      "id": "leaderboardcore",
+      "downloadIfMissing": "https://github.com/raineio/LeaderboardCore/releases/download/v0.0.2/LeaderboardCore.qmod"
     },
     {
       "version": "^0.15.22",
@@ -32,6 +32,11 @@
       "version": "^1.2.9",
       "id": "paper",
       "downloadIfMissing": "https://github.com/Fernthedev/paperlog/releases/download/v1.2.9/paperlog.qmod"
+    },
+    {
+      "version": "^0.3.0",
+      "id": "bsml",
+      "downloadIfMissing": "https://github.com/RedBrumbler/Quest-BSML/releases/download/v0.3.0/BSML.qmod"
     }
   ],
   "modFiles": [
