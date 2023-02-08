@@ -18,11 +18,14 @@
 #include "System/DateTime.hpp"
 #include "UnityEngine/Time.hpp"
 #include "Config.hpp"
+#include "logging.hpp"
 using namespace GlobalNamespace;
 
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *LLP;
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *LLVC;
 
+
+// Hooks the base game score processor to grab the values and parse them to my config function
 MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper::ProcessScore, void, PlayerData *playerData, PlayerLevelStatsData *playerLevelStats, LevelCompletionResults *levelCompletionResults, IReadonlyBeatmapData *transformedBeatmapData, IDifficultyBeatmap *difficultyBeatmap, PlatformLeaderboardsModel *platformLeaderboardsModel)
 {
     LevelCompletionResultsHelper(playerData, playerLevelStats, levelCompletionResults, transformedBeatmapData, difficultyBeatmap, platformLeaderboardsModel);
@@ -44,17 +47,17 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     int difficulty = difficultyBeatmap->get_difficultyRank();
     std::string mapType = playerLevelStats->get_beatmapCharacteristic()->get_serializedName();
 
-    std::string balls = mapType + std::to_string(difficulty); // BeatMap Allocated Level Label String :lmfao:
+    std::string balls = mapType + std::to_string(difficulty); // BeatMap Allocated Level Label String
 
     LocalLeaderboard::Config::UpdateBeatMapInfo(mapId, balls, misses, badCut, FC, currentTime, acc, score);
 
-    getLogger().info("mapId: %s", mapId.c_str());
-    getLogger().info("diff: %s", balls.c_str());
-    getLogger().info("bad cuts: %i", badCut);
-    getLogger().info("misses: %i", misses);
-    getLogger().info("Full Combo: %s", FC ? "true" : "false");
-    getLogger().info("Accuracy: %.2f", acc);
-    getLogger().info("Date: %s", currentTime.c_str());
+    INFO("mapId: %s", mapId.c_str());
+    INFO("diff: %s", balls.c_str());
+    INFO("bad cuts: %i", badCut);
+    INFO("misses: %i", misses);
+    INFO("Full Combo: %s", FC ? "true" : "false");
+    INFO("Accuracy: %.2f", acc);
+    INFO("Date: %s", currentTime.c_str());
     LLP->SetSaving(true);
         std::thread([difficultyBeatmap](){
             std::this_thread::sleep_for(std::chrono::seconds(5));

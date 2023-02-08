@@ -26,6 +26,13 @@ using namespace rapidjson;
 
 // Config Namespace
 namespace LocalLeaderboard::Config{
+/*
+Creates a brand new data entry for a beatmap
+How it does it:
+1. take the given mapID and difficulty
+2. this only runs when an entry is NOT found
+3. create a new array and entry within said array containing the beatmap data
+*/
 void AddBeatMap(Value& obj, std::string mapID, std::string diff, int missCount, int badCutCount, bool fullCombo, std::string datePlayed, float acc, int score) {
     Value difficulty(kObjectType); // diff string
     auto allocator = getConfig().config.GetAllocator();
@@ -52,7 +59,13 @@ void AddBeatMap(Value& obj, std::string mapID, std::string diff, int missCount, 
     obj.AddMember(string, difficulty, allocator);
     getConfig().Write();
 }
-
+/*
+Updates the data within a beatmap
+How it does it:
+1. take the given mapID and difficulty
+2. check that the array for the beatmap exists, if it doesnt it runs the function above to create the entry
+3. create a new entry within the array containing the beatmap data
+*/
 void UpdateBeatMapInfo(std::string mapID, std::string diff, int missCount, int badCutCount, bool fullCombo, std::string datePlayed, float acc, int score){
     auto allocator = getConfig().config.GetAllocator();
     Value& obj = getConfig().config;
@@ -87,7 +100,10 @@ void UpdateBeatMapInfo(std::string mapID, std::string diff, int missCount, int b
     else AddBeatMap(obj, mapID, diff, missCount, badCutCount, fullCombo, datePlayed, acc, score);
 }
 /*
-Loads BeatMap Data (scores) for a given beatmap,
+Loads BeatMap Data (scores) for a given beatmap
+How it does it:
+1. use the given mapID and difficulty to locate the data within the JSON
+2. push back the data for each leaderboard entry in an array
 */
 std::vector<Models::LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::string diff){
     std::vector<Models::LeaderboardEntry> leaderboard;

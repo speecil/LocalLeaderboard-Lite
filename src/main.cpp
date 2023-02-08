@@ -4,7 +4,7 @@
 #include "questui/shared/QuestUI.hpp"
 #include "leaderboardcore/shared/LeaderboardCore.hpp"
 #include "logging.hpp"
-#include "hooking.hpp"
+#include "Hooks.hpp"
 #include "Models/CustomLeaderboard.hpp"
 #include "UI/LocalLeaderboardViewController.hpp"
 #include "assets.hpp"
@@ -31,7 +31,7 @@ extern "C" void setup(ModInfo& info) {
     modInfo = info;
 	
     getConfig().Load();
-    getLogger().info("Completed setup!");
+    INFO("Completed setup!");
 }
 
 // This function runs when a new beatmap is selected
@@ -47,9 +47,9 @@ extern "C" void load() {
     il2cpp_functions::Init(); // Initialise il2cpp functions to interact with the game
     QuestUI::Init(); // Initialise QuestUI for UI elements
     LeaderboardCore::Register::RegisterLeaderboard(&leaderboard, modInfo); // register the leaderboard with the multi-leaderboard handler
-    getLogger().info("Installing hooks...");
+    INFO("Installing hooks...");
     Hooks::InstallHooks(getLogger()); // Install game hooks
-    getLogger().info("Installed all hooks!");
+    INFO("Installed all hooks!");
     LeaderboardCore::Events::NotifyLeaderboardSet() += LeaderboardSet; // Create an event listener to run my leaderboards code when a new beatmap is selected
     getConfig().Load(); // Load my mod specific config for use within the game
 }

@@ -4,6 +4,7 @@
 #include "UI/LocalLeaderboardPanel.hpp"
 #include "UI/LocalLeaderboardViewController.hpp"
 
+// Definitions for view controllers and their pointers using safeptr (makes it harder to mess up)
 namespace LocalLeaderboard::Models
 {
     class CustomLeaderboard final : public LeaderboardCore::Models::CustomLeaderboard

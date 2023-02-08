@@ -5,6 +5,8 @@
 
 #include "paper/shared/logger.hpp"
 
+// Makes Debugging using logs easier
+
 namespace BSML
 {
     class Logging

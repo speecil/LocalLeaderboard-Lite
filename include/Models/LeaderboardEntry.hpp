@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+// Defines the struct each leaderboard entry must follow to output the correct format
 namespace LocalLeaderboard::Models
 {
     struct LeaderboardEntry

@@ -22,6 +22,7 @@
 #include <array>
 #include "bsml/shared/BSML/Components/ButtonIconImage.hpp"
 #include "bsml/shared/Helpers/utilities.hpp"
+#include "logging.hpp"
 int totalPages;
 bool Ascending;
 DEFINE_TYPE(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardViewController);
@@ -59,13 +60,13 @@ namespace LocalLeaderboard::UI::ViewControllers
 
         if (originalplvc->get_transform()->Find("HeaderPanel"))
         {
-            getLogger().info("found header panel ACTIVATE");
+            INFO("found header panel ACTIVATE");
             TMPro::TextMeshProUGUI *headertext = originalplvc->get_gameObject()->GetComponentInChildren<TMPro::TextMeshProUGUI *>();
             if (headertext)
             {
-                getLogger().info("found header text ACTIVATE");
+                INFO("found header text ACTIVATE");
                 headertext->SetText("Local Leaderboard");
-                getLogger().info("set header text ACTIVATE");
+                INFO("set header text ACTIVATE");
             }
         }
         // if(shouldRefresh){
@@ -76,18 +77,19 @@ namespace LocalLeaderboard::UI::ViewControllers
     }
 
     void LocalLeaderboardViewController::DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
-    {   
+    {
         shouldRefresh = true;
-        if(!originalplvc || !originalplvc->m_CachedPtr.m_value) return ;
+        if (!originalplvc || !originalplvc->m_CachedPtr.m_value)
+            return;
         if (originalplvc->get_transform()->Find("HeaderPanel"))
         {
-            getLogger().info("found header panel DEACTIVATE");
+            INFO("found header panel DEACTIVATE");
             TMPro::TextMeshProUGUI *headertext = originalplvc->get_gameObject()->GetComponentInChildren<TMPro::TextMeshProUGUI *>();
             if (headertext)
             {
-                getLogger().info("found header text DEACTIVATE");
+                INFO("found header text DEACTIVATE");
                 headertext->SetText("HIGHSCORES");
-                getLogger().info("set header text DEACTIVATE");
+                INFO("set header text DEACTIVATE");
             }
         }
     }
@@ -148,7 +150,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         {
             if (sortMethod == 0)
             {
-                        }
+            }
             else if (sortMethod == 1)
             {
                 std::sort(leaderboardEntries.begin(), leaderboardEntries.end(), [](auto &first, auto &second)
@@ -167,10 +169,10 @@ namespace LocalLeaderboard::UI::ViewControllers
                           { return first.acc > second.acc; });
             }
         }
-        getLogger().info("leaderboard size: %lu", leaderboardEntries.size());
+        INFO("leaderboard size: %lu", leaderboardEntries.size());
         totalPages = leaderboardEntries.size() / 10;
         leaderboardTableView->SetScores(CreateLeaderboardData(leaderboardEntries, page), -1);
-        getLogger().info("Scores Set");
+        INFO("Scores Set");
         RichMyText(leaderboardTableView);
         up_button->set_interactable(true);
         down_button->set_interactable(true);
@@ -199,22 +201,22 @@ namespace LocalLeaderboard::UI::ViewControllers
 
     List<LeaderboardTableView::ScoreData *> *LocalLeaderboardViewController::CreateLeaderboardData(std::vector<LeaderboardEntry> leaderboard, int page)
     {
-        getLogger().info("Creating Leaderboard Data");
+        INFO("Creating Leaderboard Data");
         auto tableData = List<LeaderboardTableView::ScoreData *>::New_ctor();
         int pageIndex = page * 10;
         for (int i = pageIndex; i < leaderboard.size() && i < pageIndex + 10; i++)
         {
             int score = leaderboard.data()->score;
-            getLogger().info("creating leaderboard entry number %i", i);
+            INFO("creating leaderboard entry number %i", i);
             tableData->Add(CreateLeaderboardEntryData(leaderboard[i], i + 1, score));
         }
-        getLogger().info("Created Leaderboard Data");
+        INFO("Created Leaderboard Data");
         return tableData;
     }
 
     GlobalNamespace::LeaderboardTableView::ScoreData *LocalLeaderboardViewController::CreateLeaderboardEntryData(Models::LeaderboardEntry entry, int rank, int score)
     {
-        getLogger().info("Creating Entry Data");
+        INFO("Creating Entry Data");
 
         std::string formattedDate = string_format("<color=#28b077>%s</color></size>", entry.datePlayed.c_str());
         std::string formattedAcc = string_format(" - (<color=#ffd42a>%.2f%%</color>)", entry.acc);
@@ -230,7 +232,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         }
         std::string result = "<size=100%>" + formattedDate + formattedAcc + formattedCombo + "</size>";
 
-        getLogger().info("Created Entry Data");
+        INFO("Created Entry Data");
         return GlobalNamespace::LeaderboardTableView::ScoreData::New_ctor(score, result, rank, false);
     }
 }

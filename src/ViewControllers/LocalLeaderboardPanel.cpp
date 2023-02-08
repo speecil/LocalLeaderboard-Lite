@@ -8,6 +8,7 @@
 #include "bsml/shared/Helpers/getters.hpp"
 #include "bsml/shared/Helpers/creation.hpp"
 #include "assets.hpp"
+#include "logging.hpp"
 #include "bsml/shared/BSML.hpp"
 #include "bsml/shared/BSML/Components/Backgroundable.hpp"
 #include "HMUI/ImageView.hpp"

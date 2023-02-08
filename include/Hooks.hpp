@@ -4,6 +4,8 @@
 #include "beatsaber-hook/shared/utils/logging.hpp"
 #include "beatsaber-hook/shared/utils/hooking.hpp"
 
+// Hook framework that allows for automated hooking
+
 class Hooks 
 {
 	private:

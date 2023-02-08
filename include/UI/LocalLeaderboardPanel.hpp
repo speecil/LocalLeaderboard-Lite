@@ -7,6 +7,10 @@
 #include "UnityEngine/UI/HorizontalLayoutGroup.hpp"
 #include "HMUI/ImageView.hpp"
 #include "UnityEngine/UI/Button.hpp"
+
+// Declaring each function field/method
+// Useful for bsml
+
 DECLARE_CLASS_CODEGEN(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardPanel, HMUI::ViewController,
     DECLARE_OVERRIDE_METHOD(void, DidActivate, il2cpp_utils::il2cpp_type_check::MetadataGetter<&HMUI::ViewController::DidActivate>::get(), bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling);
     DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI*, promptText);
