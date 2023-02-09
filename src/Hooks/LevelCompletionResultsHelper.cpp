@@ -40,6 +40,7 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     int badCut = levelCompletionResults->badCutsCount;
     int misses = levelCompletionResults->missedCount;
     bool FC = levelCompletionResults->fullCombo;
+    
     std::string currentTime = System::DateTime::get_UtcNow().ToLocalTime().ToString("dd/MM/yyyy h:mm tt");
 
     std::string mapId = difficultyBeatmap->get_level()->i_IPreviewBeatmapLevel()->get_levelID();
