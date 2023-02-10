@@ -22,6 +22,7 @@
 #include "UI/LocalLeaderboardPanel.hpp"
 #include "questui/shared/CustomTypes/Components/MainThreadScheduler.hpp"
 #include "GlobalNamespace/GameplayModifiers.hpp"
+#include "GlobalNamespace/GameplayModifiersHelper.hpp"
 #include "UI/LocalLeaderboardViewController.hpp"
 #include "System/DateTime.hpp"
 #include "UnityEngine/Time.hpp"
@@ -51,7 +52,7 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     int misses = levelCompletionResults->missedCount;
     bool FC = levelCompletionResults->fullCombo;
 
-    std::string currentTime = System::DateTime::get_UtcNow().ToLocalTime().ToString("dd/MM/yyyy h:mm tt");
+    std::string currentTime = System::DateTime::get_UtcNow().ToLocalTime().ToString("dd/MM/yy h:mm tt");
 
     std::string mapId = difficultyBeatmap->get_level()->i_IPreviewBeatmapLevel()->get_levelID();
 
@@ -61,69 +62,65 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     std::string balls = mapType + std::to_string(difficulty); // BeatMap Allocated Level Label String
 
         std::string mods = "";
-        if (modifiers->energyType == GameplayModifiers::EnergyType::Battery)
+        if (levelCompletionResults->gameplayModifiers->energyType == GameplayModifiers::EnergyType::Battery)
         {
-            mods += "BE";
+            mods += "BE ";
         }
-        if (modifiers->noFailOn0Energy)
+        if (levelCompletionResults->gameplayModifiers->noFailOn0Energy)
         {
-            mods+= "NF";
+            mods+= "NF ";
         }
-        if (modifiers->instaFail)
+        if (levelCompletionResults->gameplayModifiers->instaFail)
         {
-            mods+= "IF";
+            mods+= "IF ";
         }
-        if (modifiers->failOnSaberClash)
+        if (levelCompletionResults->gameplayModifiers->failOnSaberClash)
         {
-            mods+= "SC";
+            mods+= "SC ";
         }
-        if (modifiers->enabledObstacleType == GameplayModifiers::EnabledObstacleType::NoObstacles)
+        if (levelCompletionResults->gameplayModifiers->enabledObstacleType == GameplayModifiers::EnabledObstacleType::NoObstacles)
         {
-            mods+= "NO";
+            mods+= "NO ";
         }
-        if (modifiers->noBombs)
+        if (levelCompletionResults->gameplayModifiers->noBombs)
         {
-            mods+= "NB";
+            mods+= "NB ";
         }
-        if (modifiers->strictAngles)
+        if (levelCompletionResults->gameplayModifiers->strictAngles)
         {
-            mods+= "SA";
+            mods+= "SA ";
         }
-        if (modifiers->disappearingArrows)
+        if (levelCompletionResults->gameplayModifiers->disappearingArrows)
         {
-            mods+= "DA";
+            mods+= "DA ";
         }
-        if (modifiers->ghostNotes)
+        if (levelCompletionResults->gameplayModifiers->ghostNotes)
         {
-            mods+= "GN";
+            mods+= "GN ";
         }
-        if (modifiers->songSpeed == GameplayModifiers::SongSpeed::Slower)
+        if (levelCompletionResults->gameplayModifiers->songSpeed == GameplayModifiers::SongSpeed::Slower)
         {
-            mods+= "SS";
+            mods+= "SS ";
         }
-        if (modifiers->songSpeed == GameplayModifiers::SongSpeed::Faster)
+        if (levelCompletionResults->gameplayModifiers->songSpeed == GameplayModifiers::SongSpeed::Faster)
         {
-            mods+= "FS";
+            mods+= "FS ";
         }
-        if (modifiers->songSpeed == GameplayModifiers::SongSpeed::SuperFast)
+        if (levelCompletionResults->gameplayModifiers->songSpeed == GameplayModifiers::SongSpeed::SuperFast)
         {
-            mods+= "SF";
+            mods+= "SF ";
         }
-        if (modifiers->smallCubes)
+        if (levelCompletionResults->gameplayModifiers->smallCubes)
         {
-            mods+= "SC";
+            mods+= "SC ";
         }
-        if (modifiers->strictAngles)
+        if (levelCompletionResults->gameplayModifiers->proMode)
         {
-            mods+= "SA";
+            mods+= "PM ";
         }
-        if (modifiers->proMode)
+        if (levelCompletionResults->gameplayModifiers->noArrows)
         {
-            mods+= "PM";
-        }
-        if (modifiers->noArrows)
-        {
-            mods+= "NA";
+            mods+= "NA ";
         }
 
     LocalLeaderboard::Config::UpdateBeatMapInfo(mapId, balls, misses, badCut, FC, currentTime, acc, score, mods);
@@ -137,6 +134,7 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     INFO("Date: %s", currentTime.c_str());
     INFO("Modifiers: %s", mods);
     LLP->SetSaving(true);
+    LLP->promptText->SetText("Saving...");
     std::thread([difficultyBeatmap]()
                 {
             std::this_thread::sleep_for(std::chrono::seconds(5));

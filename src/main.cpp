@@ -7,6 +7,7 @@
 #include "Hooks.hpp"
 #include "Models/CustomLeaderboard.hpp"
 #include "UI/LocalLeaderboardViewController.hpp"
+#include "GlobalNamespace/UserInfo.hpp"
 #include "assets.hpp"
 
 static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup

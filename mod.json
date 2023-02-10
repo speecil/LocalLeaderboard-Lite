@@ -34,7 +34,7 @@
       "downloadIfMissing": "https://github.com/Fernthedev/paperlog/releases/download/v1.2.9/paperlog.qmod"
     },
     {
-      "version": "^0.3.0",
+      "version": "*",
       "id": "bsml",
       "downloadIfMissing": "https://github.com/RedBrumbler/Quest-BSML/releases/download/v0.3.0/BSML.qmod"
     }
