@@ -3,7 +3,7 @@
 #include <string_view>
 #include "beatsaber-hook/shared/utils/typedefs.h"
 
-// This is a cmake generated header to include our png and bsml files
+// This is a cmake generated header to include my png and bsml files
 
 struct IncludedAsset {
 

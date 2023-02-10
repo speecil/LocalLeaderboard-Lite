@@ -12,11 +12,13 @@ namespace LocalLeaderboard::Models
         bool fullCombo;
         std::string datePlayed;
         int score;
-        LeaderboardEntry(int missCount, int badCutCount, float acc, bool fullCombo, std::string datePlayed, int score) : missCount(missCount),
+        std::string mods;
+        LeaderboardEntry(int missCount, int badCutCount, float acc, bool fullCombo, std::string datePlayed, int score, std::string mods) : missCount(missCount),
                                                                                                               badCutCount(badCutCount),
                                                                                                               acc(acc),
                                                                                                               fullCombo(fullCombo),
                                                                                                               datePlayed(datePlayed),
-                                                                                                              score(score) {}
+                                                                                                              score(score),
+                                                                                                              mods(mods){}
     };
 }

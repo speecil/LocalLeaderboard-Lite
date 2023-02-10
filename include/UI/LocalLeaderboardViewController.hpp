@@ -24,6 +24,7 @@ DECLARE_CLASS_CODEGEN(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardVie
     DECLARE_INSTANCE_FIELD(HMUI::IconSegmentedControl*, scopeSegmentedControl);
     DECLARE_INSTANCE_FIELD(GlobalNamespace::LeaderboardTableView*, leaderboardTableView);
     DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI*, errorText);
+    DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI*, headerText);
     DECLARE_INSTANCE_FIELD(UnityEngine::UI::Button*, up_button);
     DECLARE_INSTANCE_FIELD(UnityEngine::UI::Button*, down_button);
     DECLARE_INSTANCE_METHOD(void, OnIconSelected, HMUI::IconSegmentedControl* segmentedControl, int index);

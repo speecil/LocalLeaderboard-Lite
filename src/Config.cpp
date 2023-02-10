@@ -33,7 +33,7 @@ How it does it:
 2. this only runs when an entry is NOT found
 3. create a new array and entry within said array containing the beatmap data
 */
-void AddBeatMap(Value& obj, std::string mapID, std::string diff, int missCount, int badCutCount, bool fullCombo, std::string datePlayed, float acc, int score) {
+void AddBeatMap(Value& obj, std::string mapID, std::string diff, int missCount, int badCutCount, bool fullCombo, std::string datePlayed, float acc, int score, std::string mods) {
     Value difficulty(kObjectType); // diff string
     auto allocator = getConfig().config.GetAllocator();
     char buffer[60]; int len = sprintf(buffer, "%s", mapID.c_str());
@@ -53,6 +53,8 @@ void AddBeatMap(Value& obj, std::string mapID, std::string diff, int missCount, 
     diffValues.AddMember("datePlayed", datePlayed, allocator);
     diffValues.AddMember("acc", acc, allocator);
     diffValues.AddMember("score", score, allocator);
+    diffValues.AddMember("modifiers", mods, allocator);
+
     
     diffArr.PushBack(diffValues, allocator);
     difficulty.AddMember(string2, diffArr, allocator);
@@ -66,7 +68,7 @@ How it does it:
 2. check that the array for the beatmap exists, if it doesnt it runs the function above to create the entry
 3. create a new entry within the array containing the beatmap data
 */
-void UpdateBeatMapInfo(std::string mapID, std::string diff, int missCount, int badCutCount, bool fullCombo, std::string datePlayed, float acc, int score){
+void UpdateBeatMapInfo(std::string mapID, std::string diff, int missCount, int badCutCount, bool fullCombo, std::string datePlayed, float acc, int score, std::string mods){
     auto allocator = getConfig().config.GetAllocator();
     Value& obj = getConfig().config;
     auto itr = obj.FindMember(mapID);
@@ -79,7 +81,7 @@ void UpdateBeatMapInfo(std::string mapID, std::string diff, int missCount, int b
         difficulty.AddMember("datePlayed", datePlayed, allocator);
         difficulty.AddMember("acc", acc, allocator);
         difficulty.AddMember("score", score, allocator);
-
+        difficulty.AddMember("modifiers", mods, allocator);
 
         auto itr2 = itr->value.GetObject().FindMember(diff);
         if (itr2 != itr->value.GetObject().MemberEnd()){
@@ -97,7 +99,7 @@ void UpdateBeatMapInfo(std::string mapID, std::string diff, int missCount, int b
         itr->value.AddMember(string2, diffArr, allocator);
         getConfig().Write();
     }
-    else AddBeatMap(obj, mapID, diff, missCount, badCutCount, fullCombo, datePlayed, acc, score);
+    else AddBeatMap(obj, mapID, diff, missCount, badCutCount, fullCombo, datePlayed, acc, score, mods);
 }
 /*
 Loads BeatMap Data (scores) for a given beatmap
@@ -122,7 +124,9 @@ std::vector<Models::LeaderboardEntry> LoadBeatMapInfo(std::string mapID, std::st
                     scoreData.FindMember("acc")->value.GetFloat(),
                     scoreData.FindMember("fullCombo")->value.GetBool(),
                     scoreData.FindMember("datePlayed")->value.GetString(),
-                    scoreData.FindMember("score")->value.GetInt()));
+                    scoreData.FindMember("score")->value.GetInt(),
+                    scoreData.FindMember("modifiers")->value.GetString()));
+                    
             }
         }
     }

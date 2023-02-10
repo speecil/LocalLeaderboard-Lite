@@ -3,7 +3,9 @@
      UI objects in game that can be edited using methods -->
      
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/RedBrumbler/Quest-BSML-Docs/gh-pages/schema.xsd'>
-
+    <horizontal pref-width="91" pref-height="8" anchor-pos-y="41.5" horizontal-fit="PreferredSize" background="title-gradient" background-color="#FFFFFFFF" background-color0="#33FFFFFF" background-color1="#00FFFFFF">
+    <text id="headerText" text="LocalLeaderboard" font-size="6" align="Midline" italics="true"/>
+    </horizontal>
     <!-- Leaderboard scrollers -->
     <bg anchor-pos-x="-40" anchor-pos-y="-15">
       <page-button icon="LocalLeaderboard_carat_png" on-click="OnPageUp" id="up_button" dir="Up" anchor-pos-y="12" pref-width="10" pref-height="10"/>

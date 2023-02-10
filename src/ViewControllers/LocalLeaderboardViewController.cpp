@@ -1,3 +1,4 @@
+// Includes
 #include "UI/LocalLeaderboardViewController.hpp"
 #include "leaderboardcore/shared/LeaderboardCore.hpp"
 #include "questui/shared/BeatSaberUI.hpp"
@@ -23,10 +24,19 @@
 #include "bsml/shared/BSML/Components/ButtonIconImage.hpp"
 #include "bsml/shared/Helpers/utilities.hpp"
 #include "logging.hpp"
+#include "GlobalNamespace/PlayerData.hpp"
+#include "GlobalNamespace/PlayerDataModel.hpp"
+#include "GlobalNamespace/PlayerDataModelHelper.hpp"
+
+// variable declaration
 int totalPages;
 bool Ascending;
+bool shouldRefresh = false;
+
+// Defines the custom type for use within the file (this is c# methods within c++)
 DEFINE_TYPE(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardViewController);
 
+// Namespaces
 using namespace QuestUI;
 using namespace QuestUI::BeatSaberUI;
 using namespace HMUI;
@@ -39,41 +49,63 @@ using namespace LocalLeaderboard::Models;
 using namespace LocalLeaderboard::UI::ViewControllers;
 using namespace GlobalNamespace;
 using namespace BSML;
+
+// Defining Unity/Base Game Objects for use
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *Panel;
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *View;
-bool shouldRefresh = false;
+GlobalNamespace::PlayerDataModel *LLplayerDataModel;
+auto LLplayerData = LLplayerDataModel->playerData;
+
+// Defining own namespace
 namespace LocalLeaderboard::UI::ViewControllers
 {
-    PlatformLeaderboardViewController *originalplvc = NULL;
+    PlatformLeaderboardViewController *originalplvc = NULL; // Fixes a soft restart issue with altering the leaderboard
+
+    // DidActivate Function runs whenever my leaderboard is active
+    // Takes 3 parameters with the most important being firstActivation
     void LocalLeaderboardViewController::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
+        // Only runs on the first activation
         if (firstActivation)
         {
-
+            // Construct BSML file at the LocalLeaderboardViewControllers (my view controllers) position
             parse_and_construct(IncludedAssets::LocalLeaderboardViewController_bsml, this->get_transform(), this);
+
+            // Find Unity Objects of the game objects declared above
             Panel = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *>().FirstOrDefault();
             View = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>().FirstOrDefault();
+            // LLPlayerData = UnityEngine::Resources::FindObjectsOfTypeAll<GlobalNamespace::PlayerData *>().FirstOrDefault();
+            // LLPlayerDataModel = UnityEngine::Resources::FindObjectsOfTypeAll<GlobalNamespace::PlayerDataModel *>().FirstOrDefault();
 
+            // Refresh the leaderboard on first activation (fixes a crash)
             RefreshLeaderboard(currentDifficultyBeatmap);
+
+            // Set the text used to show "Saving" to a welcome prompt
+            Panel->promptText->set_richText(true);
+            Panel->promptText->get_gameObject()->SetActive(true);
+            Panel->promptText->SetText("<size=150%><color=#28b077>Welcome to LocalLeaderboard by </color></size><size=200%><color=blue>Speecil!</color></size>");
+
+            // Create a thread to show the welcome prompt for 7 seconds
+            std::thread([]()
+                        {
+            std::this_thread::sleep_for(std::chrono::seconds(7));
+            QuestUI::MainThreadScheduler::Schedule([=](){
+                Panel->promptText->get_gameObject()->SetActive(false);
+                Panel->promptText->set_richText(false);
+                }); })
+                .detach();
         }
         originalplvc = UnityEngine::Resources::FindObjectsOfTypeAll<PlatformLeaderboardViewController *>().FirstOrDefault();
 
-        if (originalplvc->get_transform()->Find("HeaderPanel"))
+        auto myData = LLplayerDataModel->get_playerData();
+        auto username = myData->get_playerName();
+        headerText->SetText(username + "'s LocalLeaderboard");
+
+        if (shouldRefresh)
         {
-            INFO("found header panel ACTIVATE");
-            TMPro::TextMeshProUGUI *headertext = originalplvc->get_gameObject()->GetComponentInChildren<TMPro::TextMeshProUGUI *>();
-            if (headertext)
-            {
-                INFO("found header text ACTIVATE");
-                headertext->SetText("Local Leaderboard");
-                INFO("set header text ACTIVATE");
-            }
+            RefreshLeaderboard(currentDifficultyBeatmap);
         }
-        // if(shouldRefresh){
-        //     RefreshLeaderboard(currentDifficultyBeatmap);
-        // }
-        // shouldRefresh = false;
-        RefreshLeaderboard(currentDifficultyBeatmap);
+        shouldRefresh = false;
     }
 
     void LocalLeaderboardViewController::DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
@@ -81,17 +113,6 @@ namespace LocalLeaderboard::UI::ViewControllers
         shouldRefresh = true;
         if (!originalplvc || !originalplvc->m_CachedPtr.m_value)
             return;
-        if (originalplvc->get_transform()->Find("HeaderPanel"))
-        {
-            INFO("found header panel DEACTIVATE");
-            TMPro::TextMeshProUGUI *headertext = originalplvc->get_gameObject()->GetComponentInChildren<TMPro::TextMeshProUGUI *>();
-            if (headertext)
-            {
-                INFO("found header text DEACTIVATE");
-                headertext->SetText("HIGHSCORES");
-                INFO("set header text DEACTIVATE");
-            }
-        }
     }
 
     void RichMyText(LeaderboardTableView *tableView)
@@ -230,7 +251,8 @@ namespace LocalLeaderboard::UI::ViewControllers
         {
             formattedCombo = string_format(" - <color=red>x %i</color></size>", entry.badCutCount + entry.missCount).c_str();
         }
-        std::string result = "<size=100%>" + formattedDate + formattedAcc + formattedCombo + "</size>";
+        std::string formattedMods = string_format(" - %s", entry.mods.c_str());
+        std::string result = "<size=100%>" + formattedDate + formattedAcc + formattedCombo + formattedMods + "</size>";
 
         INFO("Created Entry Data");
         return GlobalNamespace::LeaderboardTableView::ScoreData::New_ctor(score, result, rank, false);
