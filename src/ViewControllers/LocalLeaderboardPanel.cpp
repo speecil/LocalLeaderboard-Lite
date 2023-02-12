@@ -13,50 +13,43 @@
 #include "bsml/shared/BSML/Components/Backgroundable.hpp"
 #include "HMUI/ImageView.hpp"
 #include "GlobalNamespace/IDifficultyBeatmap.hpp"
-
-
+#include "UnityEngine/Time.hpp"
+#include <random>
 DEFINE_TYPE(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardPanel);
-
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *vc;
-HMUI::ImageView *bgImage;
-
-// namespaces
 using namespace QuestUI;
 using namespace QuestUI::BeatSaberUI;
 using namespace HMUI;
 using namespace UnityEngine;
 using namespace UnityEngine::UI;
 using namespace BSML;
-
-// variables
+HMUI::ImageView *bgImage;
 int colourVal = 0;
 bool userIsCool;
 extern bool Ascending;
 namespace LocalLeaderboard::UI::ViewControllers
-{   
-    // runs on every activation of the panel
+{
     void LocalLeaderboardPanel::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
-        if (firstActivation) // bool for the very first activation
+        if (firstActivation)
         {
             vc = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>().FirstOrDefault();
             parse_and_construct(IncludedAssets::PanelView_bsml, this->get_transform(), this);
-            userIsCool = Modloader::getMods().contains("SpeecilTweaks") || Modloader::getMods().contains("PauseRemapper") || Modloader::getMods().contains("FailButton");
+            int randomNum = random() %10;
+            userIsCool = (Modloader::getMods().contains("SpeecilTweaks") || Modloader::getMods().contains("PauseRemapper") || Modloader::getMods().contains("FailButton")) || (randomNum == 0);
         }
     }
 
-    // function that runs right after bsml parse to alter UI elements directly
     void LocalLeaderboardPanel::PostParse()
     {
         bgImage = container->GetComponent<BSML::Backgroundable *>()->background;
         bgImage->skew = 0.18f;
-        bgImage->gradient = true;
         LocalLeaderboard_logo->skew = 0.18f;
         separator->skew = 0.18f;
-        sorter->skew = 0.18f;
+        bgImage->set_gradient(true);
+
     }
 
-    // generates a rainbow animated gradient
     UnityEngine::Color GradientGen(int ColourPos)
     {
         static int c[3];
@@ -98,7 +91,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         if (userIsCool)
         {
             bgImage->set_color({GradientGen(colourVal)});
-            colourVal++;
+            colourVal += (UnityEngine::Time::get_deltaTime());
             if (colourVal > 255)
             {
                 colourVal = 0;
@@ -106,27 +99,11 @@ namespace LocalLeaderboard::UI::ViewControllers
         }
     }
 
-    // function to change the saving text and loading indicator
     void LocalLeaderboardPanel::SetSaving(bool value)
     {
         totalScores->get_gameObject()->set_active(value);
         prompt_loader->set_active(value);
         promptText->get_gameObject()->set_active(value);
-    }
-
-    void LocalLeaderboardPanel::changeSort()
-    {
-        if (Ascending)
-        {
-            Ascending = false;
-            sorter->get_gameObject()->GetComponentInChildren<HMUI::ImageView *>()->get_transform()->Rotate(0, 0, 180);
-        }
-        else
-        {
-            Ascending = true;
-            sorter->get_gameObject()->GetComponentInChildren<HMUI::ImageView *>()->get_transform()->Rotate(0, 0, 180);
-        }
-        vc->RefreshLeaderboard(vc->currentDifficultyBeatmap);
     }
 
 }
