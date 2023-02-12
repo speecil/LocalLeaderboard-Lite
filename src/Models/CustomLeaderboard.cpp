@@ -1,6 +1,7 @@
 #include "Models/CustomLeaderboard.hpp"
 #include "bsml/shared/Helpers/creation.hpp"
 
+// Defines the view controllers for the leaderboard and panel
 namespace LocalLeaderboard::Models
 {
     UI::ViewControllers::LocalLeaderboardPanel* CustomLeaderboard::get_panelViewController()

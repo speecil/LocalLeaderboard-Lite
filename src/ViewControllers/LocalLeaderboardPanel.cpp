@@ -13,23 +13,31 @@
 #include "bsml/shared/BSML/Components/Backgroundable.hpp"
 #include "HMUI/ImageView.hpp"
 #include "GlobalNamespace/IDifficultyBeatmap.hpp"
+
+
 DEFINE_TYPE(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardPanel);
+
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *vc;
+HMUI::ImageView *bgImage;
+
+// namespaces
 using namespace QuestUI;
 using namespace QuestUI::BeatSaberUI;
 using namespace HMUI;
 using namespace UnityEngine;
 using namespace UnityEngine::UI;
 using namespace BSML;
-HMUI::ImageView *bgImage;
+
+// variables
 int colourVal = 0;
 bool userIsCool;
 extern bool Ascending;
 namespace LocalLeaderboard::UI::ViewControllers
-{
+{   
+    // runs on every activation of the panel
     void LocalLeaderboardPanel::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
-        if (firstActivation)
+        if (firstActivation) // bool for the very first activation
         {
             vc = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>().FirstOrDefault();
             parse_and_construct(IncludedAssets::PanelView_bsml, this->get_transform(), this);
@@ -37,6 +45,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         }
     }
 
+    // function that runs right after bsml parse to alter UI elements directly
     void LocalLeaderboardPanel::PostParse()
     {
         bgImage = container->GetComponent<BSML::Backgroundable *>()->background;
@@ -47,6 +56,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         sorter->skew = 0.18f;
     }
 
+    // generates a rainbow animated gradient
     UnityEngine::Color GradientGen(int ColourPos)
     {
         static int c[3];
@@ -96,6 +106,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         }
     }
 
+    // function to change the saving text and loading indicator
     void LocalLeaderboardPanel::SetSaving(bool value)
     {
         totalScores->get_gameObject()->set_active(value);
