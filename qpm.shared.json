@@ -38,7 +38,7 @@
       },
       {
         "id": "bsml",
-        "versionRange": "^0.3.0",
+        "versionRange": "^0.2.10",
         "additionalData": {}
       },
       {
@@ -63,7 +63,7 @@
     {
       "dependency": {
         "id": "bsml",
-        "versionRange": "=0.3.0",
+        "versionRange": "^0.2.10",
         "additionalData": {
           "soLink": "https://github.com/RedBrumbler/Quest-BSML/releases/download/v0.3.0/libbsml.so",
           "debugSoLink": "https://github.com/RedBrumbler/Quest-BSML/releases/download/v0.3.0/debug_libbsml.so",

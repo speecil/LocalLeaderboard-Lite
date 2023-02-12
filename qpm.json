@@ -52,7 +52,7 @@
     },
     {
       "id": "bsml",
-      "versionRange": "*",
+      "versionRange": "^0.2.10",
       "additionalData": {}
     }
   ],
