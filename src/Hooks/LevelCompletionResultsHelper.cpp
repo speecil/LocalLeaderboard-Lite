@@ -24,6 +24,7 @@
 #include "GlobalNamespace/GameplayModifiers.hpp"
 #include "GlobalNamespace/GameplayModifiersHelper.hpp"
 #include "UI/LocalLeaderboardViewController.hpp"
+#include "GlobalNamespace/GameEnergyCounter.hpp"
 #include "System/DateTime.hpp"
 #include "UnityEngine/Time.hpp"
 #include "Config.hpp"
@@ -61,14 +62,18 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
 
     std::string balls = mapType + std::to_string(difficulty); // BeatMap Allocated Level Label String
 
+        GameEnergyCounter *energy;
+        energy = UnityEngine::Resources::FindObjectsOfTypeAll<GameEnergyCounter *>().FirstOrDefault();
         std::string mods = "";
+        if(levelCompletionResults->gameplayModifiers->get_noFailOn0Energy() && levelCompletionResults->energy == 0){
+            mods+= "Fail (NF) ";
+        }
+        else if(levelCompletionResults->energy == 0){
+            mods+= "Fail";
+        }
         if (levelCompletionResults->gameplayModifiers->energyType == GameplayModifiers::EnergyType::Battery)
         {
             mods += "BE ";
-        }
-        if (levelCompletionResults->gameplayModifiers->noFailOn0Energy)
-        {
-            mods+= "NF ";
         }
         if (levelCompletionResults->gameplayModifiers->instaFail)
         {
