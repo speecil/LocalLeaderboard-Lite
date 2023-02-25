@@ -27,6 +27,7 @@
 #include "GlobalNamespace/GameEnergyCounter.hpp"
 #include "System/DateTime.hpp"
 #include "UnityEngine/Time.hpp"
+#include "UnityEngine/Transform.hpp"
 #include "Config.hpp"
 #include "logging.hpp"
 #include <vector>
