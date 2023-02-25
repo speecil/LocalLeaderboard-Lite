@@ -7,7 +7,7 @@
     <text id="promptText" text="Saving..." active="false" anchor-pos-x="0" anchor-pos-y="10" align="BottomLeft" italics="true" />
     <loading-indicator id="prompt_loader" active="~prompt-loader-active" preserve-aspect="true" pref-width="4" pref-height="4" />
   </horizontal>
-    <horizontal id="container" pref-width="91" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" spacing="3" bg="title-gradient" bg-color="#28b077" pad="2">
+    <horizontal id="container" pref-width="91" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" spacing="3" bg="title-gradient" bg-color="#ADD8E6" pad="2">
       <vertical pref-width="10" pref-height="10">
         <image id="LocalLeaderboard_logo" src="LocalLeaderboard_LocalLeaderboard_logo_png" preserve-aspect="true" pref-width="10" pref-height="10"/>
       </vertical>
