@@ -13,8 +13,6 @@
 #include "bsml/shared/BSML/Components/Backgroundable.hpp"
 #include "HMUI/ImageView.hpp"
 #include "GlobalNamespace/IDifficultyBeatmap.hpp"
-#include "UnityEngine/Time.hpp"
-#include <random>
 DEFINE_TYPE(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardPanel);
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *vc;
 using namespace QuestUI;
@@ -35,8 +33,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         {
             vc = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>().FirstOrDefault();
             parse_and_construct(IncludedAssets::PanelView_bsml, this->get_transform(), this);
-            int randomNum = random() %10;
-            userIsCool = (Modloader::getMods().contains("SpeecilTweaks") || Modloader::getMods().contains("PauseRemapper") || Modloader::getMods().contains("FailButton")) || (randomNum == 0);
+            userIsCool = Modloader::getMods().contains("SpeecilTweaks") || Modloader::getMods().contains("PauseRemapper") || Modloader::getMods().contains("FailButton");
         }
     }
 
@@ -44,10 +41,10 @@ namespace LocalLeaderboard::UI::ViewControllers
     {
         bgImage = container->GetComponent<BSML::Backgroundable *>()->background;
         bgImage->skew = 0.18f;
+        bgImage->gradient = true;
         LocalLeaderboard_logo->skew = 0.18f;
         separator->skew = 0.18f;
-        bgImage->set_gradient(true);
-
+        sorter->skew = 0.18f;
     }
 
     UnityEngine::Color GradientGen(int ColourPos)
@@ -91,7 +88,7 @@ namespace LocalLeaderboard::UI::ViewControllers
         if (userIsCool)
         {
             bgImage->set_color({GradientGen(colourVal)});
-            colourVal += (UnityEngine::Time::get_deltaTime());
+            colourVal++;
             if (colourVal > 255)
             {
                 colourVal = 0;
@@ -104,6 +101,21 @@ namespace LocalLeaderboard::UI::ViewControllers
         totalScores->get_gameObject()->set_active(value);
         prompt_loader->set_active(value);
         promptText->get_gameObject()->set_active(value);
+    }
+
+    void LocalLeaderboardPanel::changeSort()
+    {
+        if (Ascending)
+        {
+            Ascending = false;
+            sorter->get_gameObject()->GetComponentInChildren<HMUI::ImageView *>()->get_transform()->Rotate(0, 0, 180);
+        }
+        else
+        {
+            Ascending = true;
+            sorter->get_gameObject()->GetComponentInChildren<HMUI::ImageView *>()->get_transform()->Rotate(0, 0, 180);
+        }
+        vc->RefreshLeaderboard(vc->currentDifficultyBeatmap);
     }
 
 }

@@ -1,26 +1,21 @@
 <!-- This is a BSML File (Beat Saber Markup Language), 
      it uses a custom schema and parser to turn the xml code into 
      UI objects in game that can be edited using methods -->
-
+     
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/RedBrumbler/Quest-BSML-Docs/gh-pages/schema.xsd'>
-  <horizontal pref-width="91" pref-height="8" anchor-pos-y="41.5" horizontal-fit="PreferredSize" background="title-gradient" background-color="#28b077" background-color0="#28b077" background-color1="#00FFFFFF">
-    <stack>
-      <horizontal>
-        <text id="headerText" text="LocalLeaderboard" font-size="6" align="Midline" italics="true"/>
-      </horizontal>
-    </stack>
-  </horizontal>
-  <!-- Leaderboard scrollers -->
-  <bg anchor-pos-x="-40" anchor-pos-y="-15">
-    <clickable-image anchor-pos-y="47" src="LocalLeaderboard_carat_png" id="sorter" on-click="changeSort" hover-hint='Sort Ascending/Descending' pref-height="3" pref-width="3"/>
-    <page-button icon="LocalLeaderboard_carat_png" on-click="OnPageUp" id="up_button" dir="Up" anchor-pos-y="12" pref-width="10" pref-height="10"/>
-    <vertical-icon-segments id="scopeSegmentedControl" contents='~leaderboardIcons' select-cell='OnIconSelected' anchor-pos-y="20" size-delta-x="10" size-delta-y="16.5"/>
-    <page-button icon="LocalLeaderboard_carat_png" on-click="OnPageDown" id="down_button" dir="Down" anchor-pos-y="-12" pref-width="10" pref-height="10"/>
+    <horizontal pref-width="91" pref-height="8" anchor-pos-y="41.5" horizontal-fit="PreferredSize" background="title-gradient" background-color="#28b077" background-color0="#28b077" background-color1="#00FFFFFF">
+    <text id="headerText" text="LocalLeaderboard" font-size="6" align="Midline" italics="true"/>
+    </horizontal>
+    <!-- Leaderboard scrollers -->
+    <bg anchor-pos-x="-40" anchor-pos-y="-15">
+      <page-button icon="LocalLeaderboard_carat_png" on-click="OnPageUp" id="up_button" dir="Up" anchor-pos-y="12" pref-width="10" pref-height="10"/>
+      <vertical-icon-segments id="scopeSegmentedControl" contents='~leaderboardIcons' select-cell='OnIconSelected' anchor-pos-y="20" size-delta-x="10" size-delta-y="16.5"/>
+      <page-button icon="LocalLeaderboard_carat_png" on-click="OnPageDown" id="down_button" dir="Down" anchor-pos-y="-12" pref-width="10" pref-height="10"/>
+    </bg>
+    
+    <vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pref-width='76' pref-height='60' anchor-pos-x="7" anchor-pos-y="5.5">
+      <leaderboard id='leaderboardTableView' cell-size='6.05'>
+        <text id="errorText" text="No scores on this map!" active="false" anchor-pos-x="-5" align="Center" italics="true" color="red"/>
+      </leaderboard>
+    </vertical>
   </bg>
-
-  <vertical horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pref-width='76' pref-height='60' anchor-pos-x="7" anchor-pos-y="5.5">
-    <leaderboard id='leaderboardTableView' cell-size='6.05'>
-      <text id="errorText" text="No scores on this map!" active="false" anchor-pos-x="-5" align="Center" italics="true" color="red"/>
-    </leaderboard>
-  </vertical>
-</bg>

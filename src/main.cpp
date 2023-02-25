@@ -9,7 +9,6 @@
 #include "UI/LocalLeaderboardViewController.hpp"
 #include "GlobalNamespace/UserInfo.hpp"
 #include "assets.hpp"
-#include "bsml/shared/BSML.hpp"
 
 static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
 LocalLeaderboard::Models::CustomLeaderboard leaderboard;
@@ -48,7 +47,6 @@ void LeaderboardSet(GlobalNamespace::IDifficultyBeatmap* difficultyBeatmap){
 extern "C" void load() {
     il2cpp_functions::Init(); // Initialise il2cpp functions to interact with the game
     QuestUI::Init(); // Initialise QuestUI for UI elements
-    BSML::Init(); // Initialise BSML for UI elements
     LeaderboardCore::Register::RegisterLeaderboard(&leaderboard, modInfo); // register the leaderboard with the multi-leaderboard handler
     INFO("Installing hooks...");
     Hooks::InstallHooks(getLogger()); // Install game hooks

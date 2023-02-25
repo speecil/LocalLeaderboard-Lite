@@ -12,7 +12,6 @@
 #include "HMUI/IconSegmentedControlCell.hpp"
 #include "HMUI/IconSegmentedControl_DataItem.hpp"
 #include <vector>
-#include "HMUI/ImageView.hpp"
 
 // Declaring each function field/method
 // Useful for bsml
@@ -31,9 +30,6 @@ DECLARE_CLASS_CODEGEN(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardVie
     DECLARE_INSTANCE_METHOD(void, OnIconSelected, HMUI::IconSegmentedControl* segmentedControl, int index);
     DECLARE_INSTANCE_METHOD(void, OnPageUp);
     DECLARE_INSTANCE_METHOD(void, OnPageDown);
-    DECLARE_INSTANCE_METHOD(void, changeSort);
-    DECLARE_INSTANCE_FIELD(HMUI::ImageView*, sorter);
-
     
     public:
         int page;

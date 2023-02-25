@@ -17,12 +17,13 @@ DECLARE_CLASS_CODEGEN(LocalLeaderboard::UI::ViewControllers, LocalLeaderboardPan
     DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI*, totalScores);
     DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI*, lastPlayed);
     DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, prompt_loader);
+    DECLARE_INSTANCE_FIELD(HMUI::ImageView*, sorter);
 
 
     DECLARE_INSTANCE_METHOD(void, Update);
     DECLARE_INSTANCE_METHOD(void, SetSaving, bool value);
     DECLARE_INSTANCE_METHOD(void, PostParse);
-
+    DECLARE_INSTANCE_METHOD(void, changeSort);
     DECLARE_INSTANCE_FIELD(UnityEngine::UI::HorizontalLayoutGroup*, container);
     DECLARE_INSTANCE_FIELD(HMUI::ImageView*, LocalLeaderboard_logo);
     DECLARE_INSTANCE_FIELD(HMUI::ImageView*, separator);
