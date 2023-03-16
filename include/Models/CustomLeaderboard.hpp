@@ -9,11 +9,12 @@ namespace LocalLeaderboard::Models
 {
     class CustomLeaderboard final : public LeaderboardCore::Models::CustomLeaderboard
     {
-        public:
-            UI::ViewControllers::LocalLeaderboardPanel* get_panelViewController() final override;
-            UI::ViewControllers::LocalLeaderboardViewController* get_leaderboardViewController() final override;
-        private:
-            SafePtrUnity<UI::ViewControllers::LocalLeaderboardPanel> panelViewController;
-            SafePtrUnity<UI::ViewControllers::LocalLeaderboardViewController> leaderboardViewController;
+    public:
+        UI::ViewControllers::LocalLeaderboardPanel *get_panelViewController() final override;
+        UI::ViewControllers::LocalLeaderboardViewController *get_leaderboardViewController() final override;
+
+    private:
+        SafePtrUnity<UI::ViewControllers::LocalLeaderboardPanel> panelViewController;
+        SafePtrUnity<UI::ViewControllers::LocalLeaderboardViewController> leaderboardViewController;
     };
 }

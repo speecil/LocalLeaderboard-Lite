@@ -4,20 +4,20 @@
 // Defines the view controllers for the leaderboard and panel
 namespace LocalLeaderboard::Models
 {
-    UI::ViewControllers::LocalLeaderboardPanel* CustomLeaderboard::get_panelViewController()
+    UI::ViewControllers::LocalLeaderboardPanel *CustomLeaderboard::get_panelViewController()
     {
         if (!panelViewController)
         {
-            panelViewController = BSML::Helpers::CreateViewController<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel*>();
+            panelViewController = BSML::Helpers::CreateViewController<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *>();
         }
         return panelViewController.ptr();
     }
 
-    UI::ViewControllers::LocalLeaderboardViewController* CustomLeaderboard::get_leaderboardViewController()
+    UI::ViewControllers::LocalLeaderboardViewController *CustomLeaderboard::get_leaderboardViewController()
     {
         if (!leaderboardViewController)
         {
-            leaderboardViewController = BSML::Helpers::CreateViewController<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController*>();
+            leaderboardViewController = BSML::Helpers::CreateViewController<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>();
         }
         return leaderboardViewController.ptr();
     }

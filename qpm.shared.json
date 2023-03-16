@@ -37,11 +37,6 @@
         "additionalData": {}
       },
       {
-        "id": "bsml",
-        "versionRange": "^0.3.0",
-        "additionalData": {}
-      },
-      {
         "id": "leaderboardcore",
         "versionRange": "^0.0.2",
         "additionalData": {}
@@ -54,6 +49,11 @@
       {
         "id": "paper",
         "versionRange": "^1.2.9",
+        "additionalData": {}
+      },
+      {
+        "id": "bsml",
+        "versionRange": "*",
         "additionalData": {}
       }
     ],
