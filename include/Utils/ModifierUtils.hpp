@@ -7,72 +7,45 @@
 #include "GlobalNamespace/GameEnergyCounter.hpp"
 
 
-std::string getModifiers(GlobalNamespace::LevelCompletionResults* levelCompletionResults)
-{
+
+std::string getModifiers(const GlobalNamespace::LevelCompletionResults* levelCompletionResults) {
     std::string mods = "";
-    if (levelCompletionResults->gameplayModifiers->get_noFailOn0Energy() && levelCompletionResults->energy == 0)
-    {
-        mods += "Fail (NF) ";
+    GlobalNamespace::GameplayModifiers* gameplayModifiers = levelCompletionResults->gameplayModifiers;
+    std::vector<std::pair<std::string, bool>> modifierChecks = {
+        {"Fail (NF) ", gameplayModifiers->get_noFailOn0Energy() && levelCompletionResults->energy == 0},
+        {"Fail", !gameplayModifiers->get_noFailOn0Energy() && levelCompletionResults->energy == 0},
+        {"BE ", gameplayModifiers->energyType == GlobalNamespace::GameplayModifiers::EnergyType::Battery},
+        {"IF ", gameplayModifiers->instaFail},
+        {"SC ", gameplayModifiers->failOnSaberClash},
+        {"NO ", gameplayModifiers->enabledObstacleType == GlobalNamespace::GameplayModifiers::EnabledObstacleType::NoObstacles},
+        {"NB ", gameplayModifiers->noBombs},
+        {"SA ", gameplayModifiers->strictAngles},
+        {"DA ", gameplayModifiers->disappearingArrows},
+        {"GN ", gameplayModifiers->ghostNotes},
+        {"SS ", gameplayModifiers->songSpeed == GlobalNamespace::GameplayModifiers::SongSpeed::Slower},
+        {"FS ", gameplayModifiers->songSpeed == GlobalNamespace::GameplayModifiers::SongSpeed::Faster},
+        {"SF ", gameplayModifiers->songSpeed == GlobalNamespace::GameplayModifiers::SongSpeed::SuperFast},
+        {"SC ", gameplayModifiers->smallCubes},
+        {"PM ", gameplayModifiers->proMode},
+        {"NA ", gameplayModifiers->noArrows}
+    };
+
+    for (const auto& modifierCheck : modifierChecks) {
+        if (modifierCheck.second) {
+            mods += modifierCheck.first;
+        }
     }
-    else if (levelCompletionResults->energy == 0)
-    {
-        mods += "Fail";
-    }
-    if (levelCompletionResults->gameplayModifiers->energyType == GlobalNamespace::GameplayModifiers::EnergyType::Battery)
-    {
-        mods += "BE ";
-    }
-    if (levelCompletionResults->gameplayModifiers->instaFail)
-    {
-        mods += "IF ";
-    }
-    if (levelCompletionResults->gameplayModifiers->failOnSaberClash)
-    {
-        mods += "SC ";
-    }
-    if (levelCompletionResults->gameplayModifiers->enabledObstacleType == GlobalNamespace::GameplayModifiers::EnabledObstacleType::NoObstacles)
-    {
-        mods += "NO ";
-    }
-    if (levelCompletionResults->gameplayModifiers->noBombs)
-    {
-        mods += "NB ";
-    }
-    if (levelCompletionResults->gameplayModifiers->strictAngles)
-    {
-        mods += "SA ";
-    }
-    if (levelCompletionResults->gameplayModifiers->disappearingArrows)
-    {
-        mods += "DA ";
-    }
-    if (levelCompletionResults->gameplayModifiers->ghostNotes)
-    {
-        mods += "GN ";
-    }
-    if (levelCompletionResults->gameplayModifiers->songSpeed == GlobalNamespace::GameplayModifiers::SongSpeed::Slower)
-    {
-        mods += "SS ";
-    }
-    if (levelCompletionResults->gameplayModifiers->songSpeed == GlobalNamespace::GameplayModifiers::SongSpeed::Faster)
-    {
-        mods += "FS ";
-    }
-    if (levelCompletionResults->gameplayModifiers->songSpeed == GlobalNamespace::GameplayModifiers::SongSpeed::SuperFast)
-    {
-        mods += "SF ";
-    }
-    if (levelCompletionResults->gameplayModifiers->smallCubes)
-    {
-        mods += "SC ";
-    }
-    if (levelCompletionResults->gameplayModifiers->proMode)
-    {
-        mods += "PM ";
-    }
-    if (levelCompletionResults->gameplayModifiers->noArrows)
-    {
-        mods += "NA ";
-    }
+
     return mods;
 }
+
+
+
+
+
+
+
+
+
+
+

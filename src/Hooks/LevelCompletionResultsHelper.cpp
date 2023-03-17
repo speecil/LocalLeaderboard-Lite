@@ -41,58 +41,52 @@ LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *LLVC;
 // Hooks the base game score processor to grab the values and parse them to my config function
 MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper::ProcessScore, void, PlayerData *playerData, PlayerLevelStatsData *playerLevelStats, LevelCompletionResults *levelCompletionResults, IReadonlyBeatmapData *transformedBeatmapData, IDifficultyBeatmap *difficultyBeatmap, PlatformLeaderboardsModel *platformLeaderboardsModel)
 {
-    LevelCompletionResultsHelper(playerData, playerLevelStats, levelCompletionResults, transformedBeatmapData, difficultyBeatmap, platformLeaderboardsModel); // run orig
+    // Run the original function first
+    LevelCompletionResultsHelper::ProcessScore(playerData, playerLevelStats, levelCompletionResults, transformedBeatmapData, difficultyBeatmap, platformLeaderboardsModel);
 
-    // access my gameobjects
-    LLP = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *>().FirstOrDefault();
-    LLVC = UnityEngine::Resources::FindObjectsOfTypeAll<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *>().FirstOrDefault();
+    // Retrieve the necessary objects
+    auto* localLeaderboardPanel = UnityEngine::Object::FindObjectOfType<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel*>();
+    auto* localLeaderboardViewController = UnityEngine::Object::FindObjectOfType<LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController*>();
 
-    // define score variables
-    float MaxScore = ScoreModel::ComputeMaxMultipliedScoreForBeatmap(transformedBeatmapData);
-    float modifiedScore = levelCompletionResults->modifiedScore;
-    if (modifiedScore == 0 || MaxScore == 0)
+    if (!localLeaderboardPanel || !localLeaderboardViewController) {
+        // Log an error and return if the objects could not be retrieved
+        ERROR("Failed to retrieve LocalLeaderboard objects");
         return;
-    float acc = (modifiedScore / MaxScore) * 100;
-    int score = levelCompletionResults->modifiedScore;
-    int badCut = levelCompletionResults->badCutsCount;
-    int misses = levelCompletionResults->missedCount;
-    bool FC = levelCompletionResults->fullCombo;
+    }
 
-    // get the current time
-    std::string currentTime = System::DateTime::get_UtcNow().ToLocalTime().ToString("dd/MM/yy h:mm tt");
+    // Get the score data
+    const float maxScore = ScoreModel::ComputeMaxMultipliedScoreForBeatmap(transformedBeatmapData);
+    const float modifiedScore = levelCompletionResults->modifiedScore;
+    if (modifiedScore == 0 || maxScore == 0) {
+        // Log an error and return if the score data is invalid
+        ERROR("Invalid score data: modifiedScore=%f, maxScore=%f", modifiedScore, maxScore);
+        return;
+    }
 
-    // get the beatmap ID and difficulty
-    std::string mapId = difficultyBeatmap->get_level()->i_IPreviewBeatmapLevel()->get_levelID();
-    int difficulty = difficultyBeatmap->get_difficultyRank();
-    std::string mapType = playerLevelStats->get_beatmapCharacteristic()->get_serializedName();
+    const float accuracy = (modifiedScore / maxScore) * 100;
+    const int score = levelCompletionResults->modifiedScore;
+    const int badCuts = levelCompletionResults->badCutsCount;
+    const int misses = levelCompletionResults->missedCount;
+    const bool fullCombo = levelCompletionResults->fullCombo;
 
-    // concatenate to one string
-    std::string balls = mapType + std::to_string(difficulty); // BeatMap Allocated Level Label String
+    // Get the beatmap ID and difficulty
+    const std::string mapId = difficultyBeatmap->get_level()->i_IPreviewBeatmapLevel()->get_levelID();
+    const int difficulty = difficultyBeatmap->get_difficultyRank();
+    const std::string mapType = playerLevelStats->get_beatmapCharacteristic()->get_serializedName();
+    const std::string beatmapLabel = mapType + std::to_string(difficulty);
 
-    // run the function to save the data
-    LocalLeaderboard::Config::UpdateBeatMapInfo(mapId, balls, misses, badCut, FC, currentTime, acc, score, getModifiers(levelCompletionResults));
+    // Save the data and log
+    LocalLeaderboard::Config::UpdateBeatMapInfo(mapId, beatmapLabel, misses, badCuts, fullCombo, System::DateTime::get_UtcNow().ToLocalTime().ToString("dd/MM/yy h:mm tt"), accuracy, score, getModifiers(levelCompletionResults));
+    INFO("Saved score data for beatmap: %s, difficulty: %s, accuracy: %.2f, score: %d, bad cuts: %d, misses: %d, full combo: %s", mapId.c_str(), beatmapLabel.c_str(), accuracy, score, badCuts, misses, fullCombo ? "true" : "false");
 
-    // logging
-    INFO("mapId: %s", mapId.c_str());
-    INFO("diff: %s", balls.c_str());
-    INFO("bad cuts: %i", badCut);
-    INFO("misses: %i", misses);
-    INFO("Full Combo: %s", FC ? "true" : "false");
-    INFO("Accuracy: %.2f", acc);
-    INFO("Date: %s", currentTime.c_str());
-    INFO("Modifiers: %s", getModifiers(levelCompletionResults));
-
-    // sets the saving prompt to be true
-    LLP->SetSaving(true);
-    LLP->promptText->SetText("Saving...");
-
-    // thread to wait before refreshing
-    std::thread([difficultyBeatmap]()
-                {
-            std::this_thread::sleep_for(std::chrono::seconds(5));
-            QuestUI::MainThreadScheduler::Schedule([=](){
-                LLP->SetSaving(false);
-                LLVC->RefreshLeaderboard(difficultyBeatmap);
-                }); })
-        .detach();
+    // Update the leaderboard UI and show a saving prompt
+    localLeaderboardPanel->SetSaving(true);
+    localLeaderboardPanel->promptText->SetText("Saving...");
+    std::thread([=] {
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+        QuestUI::MainThreadScheduler::Schedule([=] {
+            localLeaderboardPanel->SetSaving(false);
+            localLeaderboardViewController->RefreshLeaderboard(difficultyBeatmap);
+        });
+    }).detach();
 }
