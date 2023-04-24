@@ -44,7 +44,7 @@ void LeaderboardSet(GlobalNamespace::IDifficultyBeatmap *difficultyBeatmap)
 {
 
     leaderboard.get_leaderboardViewController()->page = 0;                              // set page to 0 to avoid blank page if new beatmap has no data on the page.
-    leaderboard.get_leaderboardViewController()->RefreshLeaderboard(difficultyBeatmap); // Refreshes leaderboard with new beatmaps data.
+    leaderboard.get_leaderboardViewController()->RefreshLeaderboard(static_cast<GlobalNamespace::IDifficultyBeatmap*>(difficultyBeatmap)); // Refreshes leaderboard with new beatmaps data.
 }
 
 // Called later on in the game loading - this is where I install function hooks
