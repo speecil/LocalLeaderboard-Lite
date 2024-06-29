@@ -62,7 +62,7 @@ if ($all -eq $false) {
         $pattern += "$custom|"
     }
     if ($pattern -eq "(") {
-        $pattern = "(melonloader|LevelGradients|"
+        $pattern = "(modloader|LocalLeaderboard|"
     }
     $pattern += "AndroidRuntime|CRASH)"
     $command += " | Select-String -pattern `"$pattern`""

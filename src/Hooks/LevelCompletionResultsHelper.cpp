@@ -38,102 +38,11 @@ LocalLeaderboard::UI::ViewControllers::LocalLeaderboardPanel *LLP;
 LocalLeaderboard::UI::ViewControllers::LocalLeaderboardViewController *LLVC;
 GlobalNamespace::GameplayModifiers *modifiers;
 
-/*
-std::string ipapi_url = "http://ip-api.com/json/";
-
-size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
-}
-
-std::string GetCountryFromIP(std::string ip_address)
-{
-    CURL *curl;
-    CURLcode res;
-    std::string read_buffer;
-
-    curl = curl_easy_init();
-    if (curl) {
-        std::string request_url = ipapi_url + ip_address;
-        curl_easy_setopt(curl, CURLOPT_URL, request_url.c_str());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &read_buffer);
-        res = curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
-
-        if(res != CURLE_OK) {
-            return "";
-        }
-
-        // Parse the JSON response to get the country information
-        // Example JSON response:
-        // {
-        //     "status": "success",
-        //     "country": "United States",
-        //     "countryCode": "US",
-        //     "region": "CA",
-        //     "regionName": "California",
-        //     "city": "Los Angeles",
-        //     "zip": "90001",
-        //     "lat": 34.0522,
-        //     "lon": -118.2437,
-        //     "timezone": "America/Los_Angeles",
-        //     "isp": "Comcast Cable",
-        //     "org": "Comcast Cable",
-        //     "as": "AS7922 Comcast Cable Communications, LLC",
-        //     "query": "98.136.243.47"
-        // }
-        size_t pos = read_buffer.find("\"country\":\"");
-        if (pos == std::string::npos) {
-            return "";
-        }
-        pos += std::strlen("\"country\":\"");
-        size_t end_pos = read_buffer.find("\"", pos);
-        if (end_pos == std::string::npos) {
-            return "";
-        }
-        std::string country = read_buffer.substr(pos, end_pos - pos);
-        return country;
-    }
-
-    return "";
-}
-
-
-std::string GetLocalIpAddress() {
-    struct ifaddrs *addrs, *tmp;
-    getifaddrs(&addrs);
-    tmp = addrs;
-    char addrBuf[INET_ADDRSTRLEN];
-    std::string ipAddress;
-
-    while (tmp) {
-        if (tmp->ifa_addr && tmp->ifa_addr->sa_family == AF_INET) {
-            struct sockaddr_in *pAddr = (struct sockaddr_in *)tmp->ifa_addr;
-            // Convert the IP address from network byte order to a string
-            inet_ntop(AF_INET, &pAddr->sin_addr, addrBuf, INET_ADDRSTRLEN);
-            if (strcmp(tmp->ifa_name, "lo") != 0) { // ignore localhost
-                ipAddress = addrBuf;
-                break;
-            }
-        }
-        tmp = tmp->ifa_next;
-    }
-
-    freeifaddrs(addrs);
-    return ipAddress;
-}
-*/
-
 std::string GetModifiersString(LevelCompletionResults *levelCompletionResults, GameEnergyCounter *energy)
 {
     std::string mods = "";
 
-    if (levelCompletionResults->gameplayModifiers->get_noFailOn0Energy() && levelCompletionResults->energy == 0)
-    {
-        mods += "Fail (NF) ";
-    }
+    if (levelCompletionResults->gameplayModifiers->get_noFailOn0Energy() && levelCompletionResults->energy == 0) mods += "Fail (NF) ";
     else if (levelCompletionResults->energy == 0)
     {
         mods += "Fail";
@@ -216,12 +125,6 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     bool FC = levelCompletionResults->fullCombo;
 
     
-    // std::string localIP = GetLocalIpAddress();
-    // auto countryCode = GetCountryFromIP(localIP);
-    // getLogger().info(countryCode.c_str());
-    //DEBUG(countryCode);
-
-    
     std::string currentTime = System::DateTime::get_UtcNow().ToLocalTime().ToString("dd/MM/yy h:mm tt");
 
     std::string mapId = difficultyBeatmap->get_level()->i_IPreviewBeatmapLevel()->get_levelID();
@@ -247,7 +150,7 @@ MAKE_AUTO_HOOK_MATCH(LevelCompletionResultsHelper, &LevelCompletionResultsHelper
     INFO("Modifiers: %s", mods);
     LLP->SetSaving(true);
     LLP->promptText->SetText("Saving...");
-    std::thread([difficultyBeatmap]()
+    std::thread([difficultyBeatmap]()   
                 {
             std::this_thread::sleep_for(std::chrono::seconds(5));
             QuestUI::MainThreadScheduler::Schedule([=](){
